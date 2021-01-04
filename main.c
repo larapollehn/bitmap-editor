@@ -3,6 +3,7 @@
 //
 
 #include <stdio.h>
+#include "bitmap.h"
 
 int main(){
     printf("Hello World\n");
