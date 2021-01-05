@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 typedef struct FileHeader{ // total: 14 bytes
-    char signature[2]; // 2 bytes
+    uint16_t *signature; // 2 bytes
     uint32_t file_size; // file size in bytes
     uint32_t reserved;
     uint32_t data_offset; // offset from beginning of file to the beginning of the bitmap data
