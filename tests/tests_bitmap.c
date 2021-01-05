@@ -2,44 +2,57 @@
 // Created by lara on 04/01/2021.
 //
 
+#include <stddef.h>
 #include "utils.h"
 #include "bitmap.h"
 
 void testCase1(){
 
-    char filepath[] = "all_gray.bmp";
+    char filepath[] = "dots.bmp";
 
     FILE * bmp = fopen(filepath, "rb");
 
-    fseek(bmp, 0, SEEK_END);
-    uint32_t file_size = ftell(bmp);
-    rewind(bmp);
+    Bitmap bitmap;
+    fread(&bitmap, sizeof (Bitmap), 1, bmp);
+    printf("bfType: %s\n", (char *) &bitmap.bfType);
+    printf("bfSize: %d byte\n", bitmap.bfSize);
+    printf("bfReserved: %d\n", bitmap.bfReserved);
+    printf("bfOffBits: %d\n", bitmap.bfOffBits);
+    printf("biSize: %d\n", bitmap.biSize);
+    printf("biWidth: %d px\n", bitmap.biWidth);
+    printf("biHeight: %d px\n", bitmap.biHeight);
+    printf("biPlanes: %d\n", bitmap.biPlanes);
+    printf("bit per pxs: %d\n", bitmap.biBitCount);
+    printf("biCompression: %d\n", bitmap.biCompression);
+    printf("biSizeImage: %d\n", bitmap.biSizeImage);
+    printf("biXPelsPerMeter: %d px/m\n", bitmap.biXPelsPerMeter);
+    printf("biYPelsPerMeter: %d px/m\n", bitmap.biYPelsPerMeter);
+    printf("biClrUsed: %d\n", bitmap.biClrUsed);
+    printf("biClrImportant: %d\n", bitmap.biClrImportant);
 
-    // FileHeader
-    uint8_t * buffer = malloc(sizeof (uint8_t) * file_size);
-    fread(buffer, sizeof (uint8_t), file_size, bmp);
+    bitmap.colorTable = malloc(sizeof (Color) * bitmap.biClrUsed);
+    fseek(bmp, offsetof(Bitmap, colorTable), SEEK_SET);
+    fread(bitmap.colorTable, sizeof (Color), bitmap.biClrUsed, bmp);
 
-    uint16_t *signature = (uint16_t *) buffer;
-    printf("signature: %s\n", (char *)signature);
+    for(int i = 0; i < bitmap.biClrUsed; i++){
+        Color *color = (bitmap.colorTable +i);
+        //printf("blue: %d green: %d, red: %d\n", color->blue, color->green, color->red);
+    }
 
-    uint32_t *fileSize = (uint32_t *)(buffer+1);
-    printf("file_size: %d byte\n", *fileSize);
+    bitmap.data = malloc(sizeof (uint8_t) * bitmap.biSizeImage);
+    fseek(bmp, bitmap.bfOffBits, SEEK_SET);
+    fread(bitmap.data, sizeof (uint8_t), bitmap.biSizeImage, bmp);
 
-    uint32_t *reserved_fh = fileSize+1;
-    printf("reserved: %d\n", *reserved_fh);
 
-    uint32_t *data_offset = fileSize+2;
-    printf("data_offset: %d\n", *data_offset);
+    for(int i = 0; i < bitmap.biSizeImage; i++){
+        uint8_t *data = (bitmap.data +i);
+        //printf("%d\n", *data);
+    }
 
-    // InfoHeader
-    uint32_t *header_size = fileSize+3;
-    printf("header_size: %d byte\n", *header_size);
-
-    int32_t *width = (int32_t *) (header_size +1);
-    printf("width: %d pixels\n", *width);
-
-    int32_t *height = width+1;
-    printf("height: %d pixels\n", *height);
+    FILE * result = fopen("output.bmp", "wb");
+    fwrite((uint8_t *)&bitmap, 1,  sizeof (Bitmap) - sizeof (Color *) - sizeof (uint8_t *), result);
+    fwrite(bitmap.colorTable, sizeof (Color), bitmap.biClrUsed, result);
+    fwrite(bitmap.data, sizeof (uint8_t), bitmap.biSizeImage, result);
 }
 
 int main(){

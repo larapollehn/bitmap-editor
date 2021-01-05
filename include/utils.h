@@ -37,4 +37,7 @@
 
 #define check_file(A, M, ARG ...) if(!(A)) {fprintf(stderr, "%s: %s: %s\n", ARG[0], ARG[2], M); goto error_handling;}
 
+/* https://stackoverflow.com/questions/3553296/sizeof-single-struct-member-in-c */
+#define member_size(type, member) sizeof(((type *)0)->member)
+
 #endif //BITMAP_EDITOR_UTILS_H

@@ -6,7 +6,7 @@
 #include "utils.h"
 #include "bitmap.h"
 
-uint32_t Bitmap_initialize(FILE *source, FileHeader *fileHeader, InfoHeader *infoHeader, ColorTable *pixels) {
+uint32_t Bitmap_initialize(FILE *source, Color *pixels) {
 
 
 
