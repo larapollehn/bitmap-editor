@@ -22,7 +22,7 @@ void testCase1(){
     printf("biWidth: %d px\n", bitmap.biWidth);
     printf("biHeight: %d px\n", bitmap.biHeight);
     printf("biPlanes: %d\n", bitmap.biPlanes);
-    printf("bit per pxs: %d\n", bitmap.biBitCount);
+    printf("biBitCount: %d\n", bitmap.biBitCount);
     printf("biCompression: %d\n", bitmap.biCompression);
     printf("biSizeImage: %d\n", bitmap.biSizeImage);
     printf("biXPelsPerMeter: %d px/m\n", bitmap.biXPelsPerMeter);
@@ -36,8 +36,10 @@ void testCase1(){
 
     for(int i = 0; i < bitmap.biClrUsed; i++){
         Color *color = (bitmap.colorTable +i);
-        //printf("blue: %d green: %d, red: %d\n", color->blue, color->green, color->red);
+        printf("b %d  g %d  r %d  a %d\n", color->blue, color->green, color->red);
     }
+
+    //printf("\nb %d  g %d  r %d  a %d\n", bitmap.colorTable->blue, bitmap.colorTable->green, bitmap.colorTable->red, bitmap.colorTable->alpha);
 
     bitmap.data = malloc(sizeof (uint8_t) * bitmap.biSizeImage);
     fseek(bmp, bitmap.bfOffBits, SEEK_SET);
@@ -53,6 +55,11 @@ void testCase1(){
     fwrite((uint8_t *)&bitmap, 1,  sizeof (Bitmap) - sizeof (Color *) - sizeof (uint8_t *), result);
     fwrite(bitmap.colorTable, sizeof (Color), bitmap.biClrUsed, result);
     fwrite(bitmap.data, sizeof (uint8_t), bitmap.biSizeImage, result);
+
+    fclose(bmp);
+    free(bitmap.colorTable);
+    free(bitmap.data);
+
 }
 
 int main(){

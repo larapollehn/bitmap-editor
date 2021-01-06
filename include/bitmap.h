@@ -31,19 +31,23 @@ typedef struct Bitmap {
     int32_t biYPelsPerMeter; // vertical resolution: pixels/meter - 4 bytes
     uint32_t biClrUsed; // number of actually used colors (8 bit = 256), the number of values in Color - 4 bytes
     uint32_t biClrImportant; // number of important colors, 0 if all - 4 bytes
-    Color * colorTable;
+    uint32_t colorTable_size;
+    Color * colorTable; // lists all colors used by the image
     uint8_t * data;
 }__attribute__((packed)) Bitmap;
 
 /**
  * Initialize the bmp photo trough scanning the picture byte by byte
  * @param filepath contains the path to the bmp picture
- * @param fileHeader contains information about the file containing the bmp picture
- * @param infoHeader contains information about the bmp picture
- * @param pixels represents all pixels of the bmp picture trough the RGB colors (and their intesity)
+ * @param the destination Bitmap to contain the read data
  * @return 0 if successful, 1 if failed
  */
-uint32_t Bitmap_initialize(FILE * source, Color * pixels);
-
+uint32_t Bitmap_scan(FILE * source, Bitmap * bitmap);
+/**
+ * Empty the allocated mem-space used for the bitmap
+ * @param bitmap whose content (data, colorTable) will be freed
+ * @return 0 if successfull, 1 if failed
+ */
+uint32_t Bitmap_destroy(Bitmap * bitmap);
 
 #endif //LIBRARY_BITMAP_H
