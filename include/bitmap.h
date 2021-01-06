@@ -31,10 +31,10 @@ typedef struct Bitmap {
     int32_t biYPelsPerMeter; // vertical resolution: pixels/meter - 4 bytes
     uint32_t biClrUsed; // number of actually used colors (8 bit = 256), the number of values in Color - 4 bytes
     uint32_t biClrImportant; // number of important colors, 0 if all - 4 bytes
-    uint32_t colorTable_size;
     Color * colorTable; // lists all colors used by the image
-    uint32_t data_size; // size of data
     uint8_t * data;
+    uint32_t data_size; // size of data
+    uint32_t colorTable_size;
 }__attribute__((packed)) Bitmap;
 
 /**
@@ -50,8 +50,31 @@ uint32_t Bitmap_scan(FILE * source, Bitmap * bitmap);
  * @return 0 if successfull, 1 if failed
  */
 uint32_t Bitmap_destroy(Bitmap * bitmap);
-
+/**
+ * Use the content of a Bitmap and produce a new bitmap picture,
+ * this is essentially a copy of an original bmp picture
+ * @param dest is the empty bmp file
+ * @param bitmap is the original picture to be copied into the dest file
+ * @return 0 if successful, 1 if failed
+ */
 uint32_t Bitmap_copy(FILE * dest, Bitmap * bitmap);
+
+/**
+ * Prints a bitmap in command Line interface/terminal
+ * @param bitmap to be printed
+ * @param filepath to the file containing the bitmap
+ * @return
+ */
+uint32_t Bitmap_print(Bitmap * bitmap, char * filepath);
+
+/**
+ * Compare two bitmaps and decide if they are equal
+ * @param first bitmap
+ * @param second bitmap
+ * @return 1 if true, 0 if false
+ */
+uint32_t Bitmap_compare(Bitmap * first, Bitmap * second);
+
 
 uint32_t Bitmap_create(FILE * dest);
 

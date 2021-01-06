@@ -8,7 +8,7 @@
 
 void testCase1(){
 
-    char filepath[] = "snail.bmp";
+    char filepath[] = "all_gray.bmp";
 
     FILE * bmp = fopen(filepath, "rb");
 
@@ -40,7 +40,7 @@ void testCase1(){
         //printf("b %d  g %d  r %d  a %d\n", color->blue, color->green, color->red);
         ++size;
     }
-    printf("colorTable size %d", size);
+    printf("colorTable size %d\n", size);
 
     //printf("\nb %d  g %d  r %d  a %d\n", bitmap.colorTable->blue, bitmap.colorTable->green, bitmap.colorTable->red, bitmap.colorTable->alpha);
 
@@ -48,11 +48,13 @@ void testCase1(){
     fseek(bmp, bitmap.bfOffBits, SEEK_SET);
     fread(bitmap.data, sizeof (uint8_t), bitmap.biSizeImage, bmp);
 
-
+    int data_size = 0;
     for(int i = 0; i < bitmap.biSizeImage; i++){
         uint8_t *data = (bitmap.data +i);
         //printf("%d\n", *data);
+        ++data_size;
     }
+    printf("data_size %d\n", data_size);
 
     FILE * result = fopen("output.bmp", "wb");
     fwrite((uint8_t *)&bitmap, 1,  sizeof (Bitmap) - sizeof (Color *) - sizeof (uint8_t *), result);
@@ -79,7 +81,7 @@ void testCase2(){
     assert_equal(40, bitmap.biSize, "Wrong: header size");
     assert_equal( bitmap.bfSize, (bitmap.bfOffBits + bitmap.biSizeImage), "Wrong: image size");
 
-
+    fclose(bmp);
     Bitmap_destroy(&bitmap);
 }
 
@@ -98,7 +100,7 @@ void testCase3(){
     assert_equal(40, bitmap.biSize, "Wrong: header size");
     assert_equal( bitmap.bfSize, (bitmap.bfOffBits + bitmap.biSizeImage), "Wrong: image size");
 
-
+    fclose(bmp);
     Bitmap_destroy(&bitmap);
 }
 
@@ -117,7 +119,7 @@ void testCase4(){
     assert_equal(40, bitmap.biSize, "Wrong: header size");
     assert_equal( bitmap.bfSize, (bitmap.bfOffBits + bitmap.biSizeImage), "Wrong: image size");
 
-
+    fclose(bmp);
     Bitmap_destroy(&bitmap);
 }
 
@@ -133,13 +135,73 @@ void testCase5(){
 
     assert_equal(NULL, bitmap.colorTable, "Wrong: size of colorTable");
 
+    fclose(bmp);
+}
+
+void testCase6(){
+    char filepath[] = "all_gray.bmp";
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    Bitmap bitmap;
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    Bitmap_print(&bitmap, filepath);
+
+    // copy the bitmap into a new bmp picture
+
+    FILE *copy = fopen("copy_all_gray.bmp", "wb");
+
+    uint32_t copied = Bitmap_copy(copy, &bitmap);
+    assert_equal(0, copied, "Failed: copy");
+
+    Bitmap copymap;
+
+    uint32_t scanned_copy = Bitmap_scan(copy, &copymap);
+    assert_equal(0, scanned_copy, "Failed: scan");
+
+    Bitmap_print(&copymap, "copy_all_gray.bmp");
+
+    fclose(bmp);
+    fclose(copy);
+    Bitmap_destroy(&bitmap);
+}
+
+void testCase7(){
+    char filepath[] = "all_gray.bmp";
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    Bitmap bitmap;
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    Bitmap_print(&bitmap, filepath);
+
+    // copy the bitmap into a new bmp picture
+
+    FILE *copy = fopen("copy_all_gray.bmp", "wb");
+
+    uint32_t copied = Bitmap_copy(copy, &bitmap);
+    assert_equal(0, copied, "Failed: copy");
+
+    fclose(bmp);
+    fclose(copy);
+    Bitmap_destroy(&bitmap);
 }
 
 int main(){
+    /*
     testCase1();
     testCase2();
     testCase3();
     testCase4();
     testCase5();
+     */
+    testCase6();
+    //testCase7();
     return 0;
 }

@@ -81,3 +81,49 @@ uint32_t Bitmap_destroy(Bitmap *bitmap) {
 
     return 0;
 }
+
+uint32_t Bitmap_copy(FILE *dest, Bitmap *bitmap) {
+
+    uint32_t readHeader = fwrite(bitmap,  sizeof (uint8_t), 54, dest); // copy the file and info-header into the bmp pic
+    check_exit(readHeader == 54, "Failed: writing headers");
+
+    uint32_t readColorTable = fwrite(bitmap->colorTable, sizeof (Color), bitmap->colorTable_size, dest); // copy only the colorTable (not colorTable_size) into the bmp pic
+    check_exit(readColorTable == bitmap->colorTable_size, "Failed: writing colorTable");
+
+    uint32_t readData = fwrite(bitmap->data, sizeof (uint8_t), bitmap->data_size, dest); // copy only the data (not data_size) into bmp pic
+    check_exit(readData == bitmap->data_size, "Failed: writing data");
+
+    return 0;
+    error_handling:
+        return 1;
+}
+
+uint32_t Bitmap_print(Bitmap *bitmap, char * filepath) {
+
+    printf("\nBitmap %s:\n", filepath);
+    printf("bfType: %s\n", (char *) &bitmap->bfType);
+    printf("bfSize: %d byte\n", bitmap->bfSize);
+    printf("bfReserved: %d\n", bitmap->bfReserved);
+    printf("bfOffBits: %d\n", bitmap->bfOffBits);
+    printf("biSize: %d\n", bitmap->biSize);
+    printf("biWidth: %d px\n", bitmap->biWidth);
+    printf("biHeight: %d px\n", bitmap->biHeight);
+    printf("biPlanes: %d\n", bitmap->biPlanes);
+    printf("biBitCount: %d\n", bitmap->biBitCount);
+    printf("biCompression: %d\n", bitmap->biCompression);
+    printf("biSizeImage: %d\n", bitmap->biSizeImage);
+    printf("biXPelsPerMeter: %d px/m\n", bitmap->biXPelsPerMeter);
+    printf("biYPelsPerMeter: %d px/m\n", bitmap->biYPelsPerMeter);
+    printf("biClrUsed: %d\n", bitmap->biClrUsed);
+    printf("biClrImportant: %d\n", bitmap->biClrImportant);
+    printf("\n");
+    printf("colorTable_size: %d\n", bitmap->colorTable_size);
+    printf("data_size: %d\n", bitmap->data_size);
+
+    return 0;
+}
+
+uint32_t Bitmap_compare(Bitmap *first, Bitmap *second) {
+
+    return 0;
+}
