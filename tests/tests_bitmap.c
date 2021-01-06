@@ -8,7 +8,7 @@
 
 void testCase1(){
 
-    char filepath[] = "dots.bmp";
+    char filepath[] = "snail.bmp";
 
     FILE * bmp = fopen(filepath, "rb");
 
@@ -37,7 +37,7 @@ void testCase1(){
     int size = 0;
     for(int i = 0; i < bitmap.biClrUsed; i++){
         Color *color = (bitmap.colorTable +i);
-        printf("b %d  g %d  r %d  a %d\n", color->blue, color->green, color->red);
+        //printf("b %d  g %d  r %d  a %d\n", color->blue, color->green, color->red);
         ++size;
     }
     printf("colorTable size %d", size);
@@ -62,15 +62,84 @@ void testCase1(){
     fclose(bmp);
     free(bitmap.colorTable);
     free(bitmap.data);
-
 }
 
 void testCase2(){
+    char filepath[] = "all_gray.bmp";
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    Bitmap bitmap;
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    assert_equal(bitmap.colorTable_size, bitmap.biClrUsed, "Wrong: size of colorTable");
+    assert_equal(0, bitmap.biCompression, "Wrong: compression");
+    assert_equal(40, bitmap.biSize, "Wrong: header size");
+    assert_equal( bitmap.bfSize, (bitmap.bfOffBits + bitmap.biSizeImage), "Wrong: image size");
+
+
+    Bitmap_destroy(&bitmap);
+}
+
+void testCase3(){
+    char filepath[] = "dots.bmp";
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    Bitmap bitmap;
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    assert_equal(bitmap.colorTable_size, bitmap.biClrUsed, "Wrong: size of colorTable");
+    assert_equal(0, bitmap.biCompression, "Wrong: compression");
+    assert_equal(40, bitmap.biSize, "Wrong: header size");
+    assert_equal( bitmap.bfSize, (bitmap.bfOffBits + bitmap.biSizeImage), "Wrong: image size");
+
+
+    Bitmap_destroy(&bitmap);
+}
+
+void testCase4(){
+    char filepath[] = "lena.bmp";
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    Bitmap bitmap;
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    assert_equal(bitmap.colorTable_size, bitmap.biClrUsed, "Wrong: size of colorTable");
+    assert_equal(0, bitmap.biCompression, "Wrong: compression");
+    assert_equal(40, bitmap.biSize, "Wrong: header size");
+    assert_equal( bitmap.bfSize, (bitmap.bfOffBits + bitmap.biSizeImage), "Wrong: image size");
+
+
+    Bitmap_destroy(&bitmap);
+}
+
+void testCase5(){
+    char filepath[] = "snail.bmp";
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    Bitmap bitmap;
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(1, scanned, "Failed: scan");
+
+    assert_equal(NULL, bitmap.colorTable, "Wrong: size of colorTable");
 
 }
 
 int main(){
     testCase1();
     testCase2();
+    testCase3();
+    testCase4();
+    testCase5();
     return 0;
 }

@@ -11,7 +11,7 @@
 uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap) {
 
     // Fill the given bitmap with information for the headers
-    uint32_t readElements = fread(&bitmap, sizeof (Bitmap), 1, source);
+    uint32_t readElements = fread(bitmap, sizeof (Bitmap), 1, source);
     check_exit(readElements == 1, "error: trying to read the content of a file\n");
 
     // check for specific requirements a picture has to have to be processed
@@ -46,7 +46,7 @@ uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap) {
 
     // determine size of data
     uint32_t size_data;
-    if(bitmap->biCompression && (bitmap->biWidth % 4 == 0)){
+    if(bitmap->biCompression == 0 && (bitmap->biWidth % 4 == 0)){
         size_data = ((bitmap->biWidth * bitmap->biHeight * bitmap->biBitCount)/ 8);
     } else {
         size_data = bitmap->biSizeImage;
