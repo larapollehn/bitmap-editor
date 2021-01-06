@@ -34,10 +34,13 @@ void testCase1(){
     fseek(bmp, offsetof(Bitmap, colorTable), SEEK_SET);
     fread(bitmap.colorTable, sizeof (Color), bitmap.biClrUsed, bmp);
 
+    int size = 0;
     for(int i = 0; i < bitmap.biClrUsed; i++){
         Color *color = (bitmap.colorTable +i);
         printf("b %d  g %d  r %d  a %d\n", color->blue, color->green, color->red);
+        ++size;
     }
+    printf("colorTable size %d", size);
 
     //printf("\nb %d  g %d  r %d  a %d\n", bitmap.colorTable->blue, bitmap.colorTable->green, bitmap.colorTable->red, bitmap.colorTable->alpha);
 
@@ -62,7 +65,12 @@ void testCase1(){
 
 }
 
+void testCase2(){
+
+}
+
 int main(){
     testCase1();
+    testCase2();
     return 0;
 }

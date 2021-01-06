@@ -15,9 +15,8 @@ uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap) {
     check_exit(readElements == 1, "error: trying to read the content of a file\n");
 
     // check for specific requirements a picture has to have to be processed
-    check_exit(bitmap->biCompression == 0, "Error: compressed file");
-    check_exit(bitmap->biSizeImage > 0, "Error: corrupt file");
-
+    check_exit(bitmap->biCompression == 0, "Error: compressed file"); // no compressed files allowed, only allowed file format is BI_RGB
+    check_exit(bitmap->biSize == 40, "Error: unexpected size of file"); // InfoHeader must have 40 byte, else further handling of bitmap would be wrong
 
     // determine if a colorTable is present and its size
     uint32_t size_colorTable;
@@ -30,8 +29,9 @@ uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap) {
     } else {
         size_colorTable = bitmap->biClrUsed;
     }
+    bitmap->colorTable_size = size_colorTable;
 
-    // initialize the colorTable
+    // initialize the colorTable or assign Null-pointer if no colorTable is used
     if(size_colorTable > 0){
         bitmap->colorTable = malloc(sizeof (Color) * size_colorTable);
         check_mem(bitmap->colorTable);
@@ -44,8 +44,23 @@ uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap) {
         bitmap->colorTable = NULL;
     }
 
+    // determine size of data
+    uint32_t size_data;
+    if(bitmap->biCompression && (bitmap->biWidth % 4 == 0)){
+        size_data = ((bitmap->biWidth * bitmap->biHeight * bitmap->biBitCount)/ 8);
+    } else {
+        size_data = bitmap->biSizeImage;
+    }
+    check_exit(size_data > 0, "Error: image data is corrupt or missing");
+    bitmap->data_size = size_data;
 
+    //initialize the image-data
+    bitmap->data = malloc(sizeof (uint8_t) * size_data);
+    check_mem(bitmap->data);
 
+    fseek(source, offsetof(Bitmap, data), SEEK_SET);
+    uint32_t readData = fread(bitmap->data, sizeof (uint8_t), size_data, source);
+    check_exit(readData == size_data, "error: trying to read the content of a file");
 
     return 0;
 

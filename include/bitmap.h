@@ -33,6 +33,7 @@ typedef struct Bitmap {
     uint32_t biClrImportant; // number of important colors, 0 if all - 4 bytes
     uint32_t colorTable_size;
     Color * colorTable; // lists all colors used by the image
+    uint32_t data_size; // size of data
     uint8_t * data;
 }__attribute__((packed)) Bitmap;
 
@@ -49,5 +50,9 @@ uint32_t Bitmap_scan(FILE * source, Bitmap * bitmap);
  * @return 0 if successfull, 1 if failed
  */
 uint32_t Bitmap_destroy(Bitmap * bitmap);
+
+uint32_t Bitmap_copy(FILE * dest, Bitmap * bitmap);
+
+uint32_t Bitmap_create(FILE * dest);
 
 #endif //LIBRARY_BITMAP_H
