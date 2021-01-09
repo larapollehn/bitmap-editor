@@ -54,11 +54,13 @@ uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap, BMP_INFO * info) {
     check_exit(size_data > 0, "Error: image data is corrupt or missing");
     info->data_size = size_data;
 
+    // ERRORORORORORO HERE
+
     //initialize the image-data
     bitmap->data = malloc(sizeof (uint8_t) * size_data);
     check_mem(bitmap->data);
 
-    fseek(source, offsetof(Bitmap, data), SEEK_SET);
+    fseek(source, bitmap->bfOffBits, SEEK_SET);
     uint32_t readData = fread(bitmap->data, sizeof (uint8_t), size_data, source);
     check_exit(readData == size_data, "error: trying to read the content of a file");
 

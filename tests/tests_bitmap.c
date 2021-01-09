@@ -300,6 +300,71 @@ void testCase8(){
     Bitmap_destroy(&bitmap);
 }
 
+void testCase9(){
+    char filepath[] = "lena.bmp";
+
+    //#############################################################################
+    // OPEN, SCAN, COPY
+    //#############################################################################
+
+    BMP_INFO info;
+
+    // open bmp picture and scan into Bitmap
+    FILE * bmp = fopen(filepath, "rb");
+    Bitmap bitmap;
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    assert_equal(0, scanned, "Failed: scan");
+
+    // create bpm picture and copy the scanned bitmap into the new picture
+    FILE *copy = fopen("copy_lena.bmp", "wb");
+    uint32_t copied = Bitmap_copy(copy, &bitmap, &info);
+    assert_equal(0, copied, "Failed: copy");
+
+    // open the file of the copy again in read-mode
+    FILE *copyImage = fopen("copy_lena.bmp", "rb");
+
+    //#############################################################################
+    // FILE SIZE
+    //#############################################################################
+    fseek(bmp, 0, SEEK_END);
+    uint32_t fileSize_original = ftell(bmp);
+    rewind(bmp);
+
+    fseek(copy, 0, SEEK_END);
+    uint32_t fileSize_copy = ftell(copy);
+    rewind(copy);
+
+    printf("FileSize:\noriginal: %d byte\ncopy:%d byte\n\n", fileSize_original, fileSize_copy);
+    assert_equal(fileSize_original, fileSize_copy, "File size of original and copy differs");
+
+    //#############################################################################
+    // READ FILE CONTENT INTO BUFFER
+    //#############################################################################
+    uint8_t * original = malloc(sizeof (uint8_t) * fileSize_original);
+    uint32_t read_original = fread(original, sizeof (uint8_t), fileSize_original, bmp);
+    assert_equal(fileSize_original, read_original, "Error: reading original file");
+
+    uint8_t * thecopy = malloc(sizeof (uint8_t) * fileSize_copy);
+    uint32_t read_copy = fread(thecopy, sizeof (uint8_t), fileSize_copy, copyImage);
+    assert_equal(fileSize_copy, read_copy, "Error: reading copy file");
+
+    //#############################################################################
+    // Check file content
+    //#############################################################################
+
+    for(int i = 0; i < fileSize_original; i++){
+        printf("\n%d:",i);
+        printf(" "BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(*(original +i)));
+        printf(" "BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(*(thecopy +i)));
+    }
+
+    //#############################################################################
+    free(original);
+    free(thecopy);
+    fclose(bmp);
+    fclose(copy);
+    Bitmap_destroy(&bitmap);
+}
 
 int main(){
     /*
@@ -312,5 +377,6 @@ int main(){
     testCase7();
      */
     testCase8();
+    testCase9();
     return 0;
 }
