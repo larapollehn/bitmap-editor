@@ -33,9 +33,12 @@ typedef struct Bitmap {
     uint32_t biClrImportant; // number of important colors, 0 if all - 4 bytes
     Color * colorTable; // lists all colors used by the image
     uint8_t * data;
-    uint32_t data_size; // size of data
-    uint32_t colorTable_size;
 }__attribute__((packed)) Bitmap;
+
+typedef struct BMP_INFO {
+    uint32_t data_size;
+    uint32_t colorTable_size;
+} BMP_INFO;
 
 /**
  * Initialize the bmp photo trough scanning the picture byte by byte
@@ -43,7 +46,7 @@ typedef struct Bitmap {
  * @param the destination Bitmap to contain the read data
  * @return 0 if successful, 1 if failed
  */
-uint32_t Bitmap_scan(FILE * source, Bitmap * bitmap);
+uint32_t Bitmap_scan(FILE * source, Bitmap * bitmap, BMP_INFO * info);
 /**
  * Empty the allocated mem-space used for the bitmap
  * @param bitmap whose content (data, colorTable) will be freed
@@ -57,7 +60,7 @@ uint32_t Bitmap_destroy(Bitmap * bitmap);
  * @param bitmap is the original picture to be copied into the dest file
  * @return 0 if successful, 1 if failed
  */
-uint32_t Bitmap_copy(FILE * dest, Bitmap * bitmap);
+uint32_t Bitmap_copy(FILE * dest, Bitmap * bitmap, BMP_INFO * info);
 
 /**
  * Prints a bitmap in command Line interface/terminal
@@ -65,7 +68,7 @@ uint32_t Bitmap_copy(FILE * dest, Bitmap * bitmap);
  * @param filepath to the file containing the bitmap
  * @return
  */
-uint32_t Bitmap_print(Bitmap * bitmap, char * filepath);
+uint32_t Bitmap_print(Bitmap * bitmap, char * filepath, BMP_INFO * info);
 
 /**
  * Compare two bitmaps and decide if they are equal
