@@ -79,6 +79,14 @@ uint32_t Bitmap_print(Bitmap * bitmap, char * filepath, BMP_INFO * info);
 uint32_t Bitmap_compare(Bitmap * first, Bitmap * second);
 
 
-uint32_t Bitmap_create(FILE * dest);
+/**
+ *
+ * @param dest is the file that will hold a bmp picture in unicolor (rgb)
+ * @param blue (0-255) saturation of b
+ * @param green (0-255) saturation of g
+ * @param red (0-255) saturation of r
+ * @return
+ */
+uint32_t Bitmap_create(FILE * dest, uint32_t blue, uint32_t green, uint32_t red, uint32_t width, uint32_t height);
 
 #endif //LIBRARY_BITMAP_H

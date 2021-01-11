@@ -89,9 +89,10 @@ uint32_t Bitmap_copy(FILE *dest, Bitmap *bitmap, BMP_INFO * info) {
     uint32_t readHeader = fwrite(bitmap,  sizeof (uint8_t), 54, dest); // copy the file and info-header into the bmp pic
     check_exit(readHeader == 54, "Failed: writing headers");
 
-    uint32_t readColorTable = fwrite(bitmap->colorTable, sizeof (Color), info->colorTable_size, dest); // copy only the colorTable (not colorTable_size) into the bmp pic
-    check_exit(readColorTable == info->colorTable_size, "Failed: writing colorTable");
-
+    if(info->colorTable_size > 0) {
+        uint32_t readColorTable = fwrite(bitmap->colorTable, sizeof(Color), info->colorTable_size, dest); // copy only the colorTable (not colorTable_size) into the bmp pic
+        check_exit(readColorTable == info->colorTable_size, "Failed: writing colorTable");
+    }
     uint32_t readData = fwrite(bitmap->data, sizeof (uint8_t), info->data_size, dest); // copy only the data (not data_size) into bmp pic
     check_exit(readData == info->data_size, "Failed: writing data");
 
@@ -125,7 +126,32 @@ uint32_t Bitmap_print(Bitmap *bitmap, char * filepath, BMP_INFO * info) {
     return 0;
 }
 
-uint32_t Bitmap_compare(Bitmap *first, Bitmap *second) {
+uint32_t Bitmap_create(FILE *dest, uint32_t blue, uint32_t green, uint32_t red, uint32_t width, uint32_t height) {
+    Bitmap bitmap;
+
+    bitmap.biCompression = 0;
+    bitmap.biSize = 40;
+    bitmap.biClrUsed = 1;
+
+    bitmap.biWidth = width;
+    bitmap.biHeight = height;
+    bitmap.biBitCount = width * height;
+
+    bitmap.biClrUsed = 0;
+
+    bitmap.data = malloc(sizeof (uint8_t) * bitmap.biBitCount);
+
+    for(int i = 0; i < bitmap.biBitCount; i++){
+        bitmap.data[i] = 0;
+    }
+
+    BMP_INFO info;
+    info.data_size = bitmap.biBitCount;
+    info.colorTable_size = 0;
+
+    uint32_t copied = Bitmap_copy(dest, &bitmap, &info);
+    printf("%d\n", copied);
 
     return 0;
 }
+

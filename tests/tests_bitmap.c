@@ -160,22 +160,6 @@ void testCase4(){
     Bitmap_destroy(&bitmap);
 }
 
-void testCase5(){
-    char filepath[] = "snail.bmp";
-
-    FILE * bmp = fopen(filepath, "rb");
-
-    Bitmap bitmap;
-    BMP_INFO info;
-
-    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
-    assert_equal(1, scanned, "Failed: scan");
-
-    assert_equal(NULL, bitmap.colorTable, "Wrong: size of colorTable");
-
-    fclose(bmp);
-}
-
 void testCase6(){
     char filepath[] = "all_gray.bmp";
 
@@ -301,7 +285,7 @@ void testCase8(){
 }
 
 void testCase9(){
-    char filepath[] = "lena.bmp";
+    char filepath[] = "all_gray.bmp";
 
     //#############################################################################
     // OPEN, SCAN, COPY
@@ -316,12 +300,12 @@ void testCase9(){
     assert_equal(0, scanned, "Failed: scan");
 
     // create bpm picture and copy the scanned bitmap into the new picture
-    FILE *copy = fopen("copy_lena.bmp", "wb");
+    FILE *copy = fopen("copy_all_gray.bmp", "wb");
     uint32_t copied = Bitmap_copy(copy, &bitmap, &info);
     assert_equal(0, copied, "Failed: copy");
 
     // open the file of the copy again in read-mode
-    FILE *copyImage = fopen("copy_lena.bmp", "rb");
+    FILE *copyImage = fopen("copy_all_gray.bmp", "rb");
 
     //#############################################################################
     // FILE SIZE
@@ -358,6 +342,16 @@ void testCase9(){
         printf(" "BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(*(thecopy +i)));
     }
 
+    Bitmap_print(&bitmap, filepath, &info);
+
+    for(int i = 0; i < bitmap.biClrUsed; i++){
+        printf("%d: %hhu %hhu %hhu %hhu\n", i, (bitmap.colorTable +i)->green, (bitmap.colorTable +i)->blue, (bitmap.colorTable +i)->red, (bitmap.colorTable +i)->alpha);
+    }
+
+    for(int i = 0; i < bitmap.biSizeImage; i++){
+        printf("%d\n", *(bitmap.data + i));
+    }
+
     //#############################################################################
     free(original);
     free(thecopy);
@@ -366,17 +360,26 @@ void testCase9(){
     Bitmap_destroy(&bitmap);
 }
 
+void testCase10(){
+
+    char filepath[] = "created.bmp";
+
+    FILE * bmp = fopen(filepath, "wb");
+    uint32_t created = Bitmap_create(bmp, 0,0,0, 4, 4);
+    assert_equal(0, created, "Failed: creating bitmap");
+}
+
 int main(){
     /*
     testCase1();
     testCase2();
     testCase3();
     testCase4();
-    testCase5();
     testCase6();
     testCase7();
-     */
     testCase8();
-    testCase9();
+     */
+    //testCase9();
+    testCase10();
     return 0;
 }
