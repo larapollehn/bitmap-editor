@@ -16,7 +16,6 @@ uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap) {
 
     // check for specific requirements a picture has to have to be processed
     check_exit(bitmap->biCompression == 0, "Error: compressed file"); // no compressed files allowed, only allowed file format is BI_RGB
-    check_exit(bitmap->biSize == 40, "Error: unexpected size of file"); // InfoHeader must have 40 byte, else further handling of bitmap would be wrong
 
     // determine if a colorTable is present and its size
     uint32_t size_colorTable;
@@ -85,8 +84,8 @@ uint32_t Bitmap_destroy(Bitmap *bitmap) {
 
 uint32_t Bitmap_copyIntoFile(FILE *dest, Bitmap *bitmap) {
 
-    uint32_t writtenHeader = fwrite(bitmap,  sizeof (uint8_t), 54, dest); // copy the file and info-header into the bmp pic
-    check_exit(writtenHeader == 54, "Failed: writing headers");
+    uint32_t writtenHeader = fwrite(bitmap,  sizeof (uint8_t), (FILEHEADER_SIZE + bitmap->biSize), dest); // copy the file and info-header into the bmp pic
+    check_exit(writtenHeader == (FILEHEADER_SIZE + bitmap->biSize), "Failed: writing headers");
 
     if(bitmap->colorTable_size > 0) {
         uint32_t writtenColorTable = fwrite(bitmap->colorTable, sizeof(Color), bitmap->colorTable_size, dest); // copy only the colorTable (not colorTable_size) into the bmp pic

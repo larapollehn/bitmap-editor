@@ -5,6 +5,8 @@
 #ifndef LIBRARY_BITMAP_H
 #define LIBRARY_BITMAP_H
 
+#define FILEHEADER_SIZE 14
+
 #include <stdint.h>
 
 typedef struct Color{
