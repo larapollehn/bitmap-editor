@@ -106,12 +106,11 @@ void testCase2(){
     FILE * bmp = fopen(filepath, "rb");
 
     Bitmap bitmap;
-    BMP_INFO info;
 
-    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
-    assert_equal(info.colorTable_size, bitmap.biClrUsed, "Wrong: size of colorTable");
+    assert_equal(bitmap.colorTable_size, bitmap.biClrUsed, "Wrong: size of colorTable");
     assert_equal(0, bitmap.biCompression, "Wrong: compression");
     assert_equal(40, bitmap.biSize, "Wrong: header size");
     assert_equal( bitmap.bfSize, (bitmap.bfOffBits + bitmap.biSizeImage), "Wrong: image size");
@@ -126,12 +125,11 @@ void testCase3(){
     FILE * bmp = fopen(filepath, "rb");
 
     Bitmap bitmap;
-    BMP_INFO info;
 
-    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
-    assert_equal(info.colorTable_size, bitmap.biClrUsed, "Wrong: size of colorTable");
+    assert_equal(bitmap.colorTable_size, bitmap.biClrUsed, "Wrong: size of colorTable");
     assert_equal(0, bitmap.biCompression, "Wrong: compression");
     assert_equal(40, bitmap.biSize, "Wrong: header size");
     assert_equal( bitmap.bfSize, (bitmap.bfOffBits + bitmap.biSizeImage), "Wrong: image size");
@@ -146,12 +144,11 @@ void testCase4(){
     FILE * bmp = fopen(filepath, "rb");
 
     Bitmap bitmap;
-    BMP_INFO info;
 
-    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
-    assert_equal(info.colorTable_size, bitmap.biClrUsed, "Wrong: size of colorTable");
+    assert_equal(bitmap.colorTable_size, bitmap.biClrUsed, "Wrong: size of colorTable");
     assert_equal(0, bitmap.biCompression, "Wrong: compression");
     assert_equal(40, bitmap.biSize, "Wrong: header size");
     assert_equal( bitmap.bfSize, (bitmap.bfOffBits + bitmap.biSizeImage), "Wrong: image size");
@@ -166,27 +163,28 @@ void testCase6(){
     FILE * bmp = fopen(filepath, "rb");
 
     Bitmap bitmap;
-    BMP_INFO info;
 
-    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
-    Bitmap_print(&bitmap, filepath, &info);
+    Bitmap_print(&bitmap, filepath);
 
     // copy the bitmap into a new bmp picture
 
     FILE *copy = fopen("copy_all_gray.bmp", "wb");
 
-    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap, &info);
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
     assert_equal(0, copied, "Failed: copy");
 
     Bitmap copymap;
-    BMP_INFO copyinfo;
 
-    uint32_t scanned_copy = Bitmap_scan(copy, &copymap, &copyinfo);
+    FILE *copyOpen = fopen("copy_all_gray.bmp", "rb");
+
+    // THIS DOES NOT WORK YET: scanning a copied bitmap
+    uint32_t scanned_copy = Bitmap_scan(copyOpen, &copymap);
     assert_equal(0, scanned_copy, "Failed: scan");
 
-    Bitmap_print(&copymap, "copy_all_gray.bmp", &copyinfo);
+    Bitmap_print(&copymap, "copy_all_gray.bmp");
 
     fclose(bmp);
     fclose(copy);
@@ -199,18 +197,17 @@ void testCase7(){
     FILE * bmp = fopen(filepath, "rb");
 
     Bitmap bitmap;
-    BMP_INFO info;
 
-    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
-    Bitmap_print(&bitmap, filepath, &info);
+    Bitmap_print(&bitmap, filepath);
 
     // copy the bitmap into a new bmp picture
 
     FILE *copy = fopen("copy_all_gray.bmp", "wb");
 
-    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap, &info);
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
     assert_equal(0, copied, "Failed: copy");
 
     fclose(bmp);
@@ -225,17 +222,15 @@ void testCase8(){
     // OPEN, SCAN, COPY
     //#############################################################################
 
-    BMP_INFO info;
-
     // open bmp picture and scan into Bitmap
     FILE * bmp = fopen(filepath, "rb");
     Bitmap bitmap;
-    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
     // create bpm picture and copy the scanned bitmap into the new picture
     FILE *copy = fopen("copy_all_gray.bmp", "wb");
-    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap, &info);
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
     assert_equal(0, copied, "Failed: copy");
 
     // open the file of the copy again in read-mode
@@ -291,17 +286,15 @@ void testCase9(){
     // OPEN, SCAN, COPY
     //#############################################################################
 
-    BMP_INFO info;
-
     // open bmp picture and scan into Bitmap
     FILE * bmp = fopen(filepath, "rb");
     Bitmap bitmap;
-    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
     // create bpm picture and copy the scanned bitmap into the new picture
     FILE *copy = fopen("copy_all_gray.bmp", "wb");
-    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap, &info);
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
     assert_equal(0, copied, "Failed: copy");
 
     // open the file of the copy again in read-mode
@@ -342,7 +335,7 @@ void testCase9(){
         printf(" "BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(*(thecopy +i)));
     }
 
-    Bitmap_print(&bitmap, filepath, &info);
+    Bitmap_print(&bitmap, filepath);
 
     for(int i = 0; i < bitmap.biClrUsed; i++){
         printf("%d: %hhu %hhu %hhu %hhu\n", i, (bitmap.colorTable +i)->green, (bitmap.colorTable +i)->blue, (bitmap.colorTable +i)->red, (bitmap.colorTable +i)->alpha);
@@ -367,62 +360,57 @@ void testCase9(){
 void testCase10(){
     char filepath[] = "all_gray.bmp";
 
-    BMP_INFO info;
     Bitmap bitmap;
 
     // open bmp picture and scan into Bitmap
     FILE * bmp = fopen(filepath, "rb");
-    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
-    Bitmap_print(&bitmap, filepath, &info);
+    Bitmap_print(&bitmap, filepath);
 
-    for(int i = 0; i < info.data_size; i++){
+    for(int i = 0; i < bitmap.data_size; i++){
         uint8_t * pixel = (uint8_t *)(bitmap.data +i);
         *pixel = 0;
     }
 
     FILE *alteredPic = fopen("all_black.bmp", "wb");
-    uint32_t altered = Bitmap_copyIntoFile(alteredPic, &bitmap, &info);
+    uint32_t altered = Bitmap_copyIntoFile(alteredPic, &bitmap);
     assert_equal(0, altered, "Failed: copy");
 
 }
 
-void testCase10(){
+void testCase11(){
     char filepath[] = "all_gray.bmp";
 
-    BMP_INFO info;
     Bitmap bitmap;
 
     // open bmp picture and scan into Bitmap
     FILE * bmp = fopen(filepath, "rb");
-    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
-    Bitmap_print(&bitmap, filepath, &info);
+    Bitmap_print(&bitmap, filepath);
 
-    for(int i = 0; i < info.data_size; i++){
+    for(int i = 0; i < bitmap.data_size; i++){
         uint8_t * pixel = (uint8_t *)(bitmap.data +i);
         *pixel = 0;
     }
 
     FILE *alteredPic = fopen("all_black.bmp", "wb");
-    uint32_t altered = Bitmap_copyIntoFile(alteredPic, &bitmap, &info);
+    uint32_t altered = Bitmap_copyIntoFile(alteredPic, &bitmap);
     assert_equal(0, altered, "Failed: copy");
-
 }
 
 int main(){
-    /*
-    testCase1();
-    testCase2();
-    testCase3();
-    testCase4();
-    testCase6();
-    testCase7();
-    testCase8();
-     */
-    testCase9();
-    //testCase10();
+    //testCase1();
+    //testCase2();
+    //testCase3();
+    //testCase4();
+    // ERROR testCase6(); scanning a copied file does not work
+    //testCase7();
+    //testCase8();
+    //testCase9();
+    testCase10();
     return 0;
 }

@@ -8,7 +8,7 @@
 #include "utils.h"
 #include "bitmap.h"
 
-uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap, BMP_INFO * info) {
+uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap) {
 
     // Fill the given bitmap with information for the headers
     uint32_t readElements = fread(bitmap, sizeof (Bitmap), 1, source);
@@ -29,7 +29,7 @@ uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap, BMP_INFO * info) {
     } else {
         size_colorTable = bitmap->biClrUsed;
     }
-    info->colorTable_size = size_colorTable;
+    bitmap->colorTable_size = size_colorTable;
 
     // initialize the colorTable or assign Null-pointer if no colorTable is used
     if(size_colorTable > 0){
@@ -52,7 +52,7 @@ uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap, BMP_INFO * info) {
         size_data = bitmap->biSizeImage;
     }
     check_exit(size_data > 0, "Error: image data is corrupt or missing");
-    info->data_size = size_data;
+    bitmap->data_size = size_data;
 
 
     //initialize the image-data
@@ -83,30 +83,31 @@ uint32_t Bitmap_destroy(Bitmap *bitmap) {
     return 0;
 }
 
-uint32_t Bitmap_copyIntoFile(FILE *dest, Bitmap *bitmap, BMP_INFO * info) {
+uint32_t Bitmap_copyIntoFile(FILE *dest, Bitmap *bitmap) {
 
     uint32_t writtenHeader = fwrite(bitmap,  sizeof (uint8_t), 54, dest); // copy the file and info-header into the bmp pic
     check_exit(writtenHeader == 54, "Failed: writing headers");
 
-    if(info->colorTable_size > 0) {
-        uint32_t writtenColorTable = fwrite(bitmap->colorTable, sizeof(Color), info->colorTable_size, dest); // copy only the colorTable (not colorTable_size) into the bmp pic
-        check_exit(writtenColorTable == info->colorTable_size, "Failed: writing colorTable");
+    if(bitmap->colorTable_size > 0) {
+        uint32_t writtenColorTable = fwrite(bitmap->colorTable, sizeof(Color), bitmap->colorTable_size, dest); // copy only the colorTable (not colorTable_size) into the bmp pic
+        check_exit(writtenColorTable == bitmap->colorTable_size, "Failed: writing colorTable");
     }
-    uint32_t writtenData = fwrite(bitmap->data, sizeof (uint8_t), info->data_size, dest); // copy only the data (not data_size) into bmp pic
-    check_exit(writtenData == info->data_size, "Failed: writing data");
+    uint32_t writtenData = fwrite(bitmap->data, sizeof (uint8_t), bitmap->data_size, dest); // copy only the data (not data_size) into bmp pic
+    check_exit(writtenData == bitmap->data_size, "Failed: writing data");
 
     return 0;
     error_handling:
         return 1;
 }
 
-uint32_t Bitmap_print(Bitmap *bitmap, char * filepath, BMP_INFO * info) {
+uint32_t Bitmap_print(Bitmap *bitmap, char * filepath) {
 
     printf("\nBitmap %s:\n", filepath);
     printf("bfType: %s\n", (char *) &bitmap->bfType);
     printf("bfSize: %d byte\n", bitmap->bfSize);
     printf("bfReserved: %d\n", bitmap->bfReserved);
     printf("bfOffBits: %d\n", bitmap->bfOffBits);
+    printf("\n");
     printf("biSize: %d\n", bitmap->biSize);
     printf("biWidth: %d px\n", bitmap->biWidth);
     printf("biHeight: %d px\n", bitmap->biHeight);
@@ -119,38 +120,8 @@ uint32_t Bitmap_print(Bitmap *bitmap, char * filepath, BMP_INFO * info) {
     printf("biClrUsed: %d\n", bitmap->biClrUsed);
     printf("biClrImportant: %d\n", bitmap->biClrImportant);
     printf("\n");
-    printf("colorTable_size: %d\n", info->colorTable_size);
-    printf("data_size: %d\n", info->data_size);
+    printf("colorTable_size: %d\n", bitmap->colorTable_size);
+    printf("data_size: %d\n", bitmap->data_size);
 
     return 0;
 }
-
-uint32_t Bitmap_create(FILE *dest, uint32_t width, uint32_t height) {
-    Bitmap bitmap;
-
-    bitmap.biCompression = 0;
-    bitmap.biSize = 40;
-    bitmap.biClrUsed = 1;
-
-    bitmap.biWidth = width;
-    bitmap.biHeight = height;
-    bitmap.biBitCount = width * height;
-
-    bitmap.biClrUsed = 0;
-
-    bitmap.data = malloc(sizeof (uint8_t) * bitmap.biBitCount);
-
-    for(int i = 0; i < bitmap.biBitCount; i++){
-        bitmap.data[i] = 0;
-    }
-
-    BMP_INFO info;
-    info.data_size = bitmap.biBitCount;
-    info.colorTable_size = 0;
-
-    uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap, &info);
-    printf("%d\n", copied);
-
-    return 0;
-}
-

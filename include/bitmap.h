@@ -16,10 +16,12 @@ typedef struct Color{
 
 /* Naming-Schema https://de.wikipedia.org/wiki/Windows_Bitmap#Dateiformat_(Version_3) */
 typedef struct Bitmap {
+    // BITMAPFILEHEADER
     uint16_t bfType; // 2 bytes
     uint32_t bfSize; // file size in bytes
     uint32_t bfReserved;
     uint32_t bfOffBits; // offset from beginning of file to the beginning of the bitmap data
+    // BITMAPINFOHEADER
     uint32_t biSize; // size of InfoHeader - 4 bytes
     int32_t biWidth; // horizontal biWidth of bitmap in pixels - 4 bytes
     int32_t biHeight; // vertical heigth of bitmap in pixels - 4 bytes
@@ -33,12 +35,10 @@ typedef struct Bitmap {
     uint32_t biClrImportant; // number of important colors, 0 if all - 4 bytes
     Color * colorTable; // lists all colors used by the image
     uint8_t * data;
-}__attribute__((packed)) Bitmap;
-
-typedef struct BMP_INFO {
     uint32_t data_size;
     uint32_t colorTable_size;
-} BMP_INFO;
+}__attribute__((packed)) Bitmap;
+
 
 /**
  * Initialize the bmp photo trough scanning the picture byte by byte
@@ -46,7 +46,7 @@ typedef struct BMP_INFO {
  * @param the destination Bitmap to contain the read data
  * @return 0 if successful, 1 if failed
  */
-uint32_t Bitmap_scan(FILE * source, Bitmap * bitmap, BMP_INFO * info);
+uint32_t Bitmap_scan(FILE * source, Bitmap * bitmap);
 /**
  * Empty the allocated mem-space used for the bitmap
  * @param bitmap whose content (data, colorTable) will be freed
@@ -60,29 +60,13 @@ uint32_t Bitmap_destroy(Bitmap * bitmap);
  * @param bitmap is the original picture to be copied into the dest file
  * @return 0 if successful, 1 if failed
  */
-uint32_t Bitmap_copyIntoFile(FILE * dest, Bitmap * bitmap, BMP_INFO * info);
-
+uint32_t Bitmap_copyIntoFile(FILE * dest, Bitmap * bitmap);
 /**
  * Prints a bitmap in command Line interface/terminal
  * @param bitmap to be printed
  * @param filepath to the file containing the bitmap
  * @return
  */
-uint32_t Bitmap_print(Bitmap * bitmap, char * filepath, BMP_INFO * info);
-
-/**
- * Compare two bitmaps and decide if they are equal
- * @param first bitmap
- * @param second bitmap
- * @return 1 if true, 0 if false
- */
-uint32_t Bitmap_compare(Bitmap * first, Bitmap * second);
-
-
-/**
- * @param dest is the file that will hold a bmp picture in unicolor (rgb)
- * @return
- */
-uint32_t Bitmap_create(FILE * dest, uint32_t width, uint32_t height);
+uint32_t Bitmap_print(Bitmap * bitmap, char * filepath);
 
 #endif //LIBRARY_BITMAP_H
