@@ -398,16 +398,40 @@ void testCase11(){
     Bitmap_print(&bitmap, filepath);
 }
 
+void printAllPictureInfos(){
+    char * filepaths[5] = {"all_gray.bmp", "dots.bmp", "lena.bmp", "greenland_grid_velo.bmp", "blackbuck.bmp"};
+
+    for(int i = 0; i < 5; i++){
+        Bitmap bitmap;
+
+        // open bmp picture and scan into Bitmap
+        FILE * bmp = fopen(filepaths[i], "rb");
+
+        uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+        assert_equal(0, scanned, "Failed: scan");
+
+        printf("\n---#################---\n");
+        Bitmap_print(&bitmap, filepaths[i]);
+
+        Bitmap_destroy(&bitmap);
+        fclose(bmp);
+    }
+
+}
+
 int main(){
-    //testCase1();
-    //testCase2();
-    //testCase3();
-    //testCase4();
-    // ERROR testCase6(); scanning a copied file does not work
-    //testCase7();
-    //testCase8();
-    //testCase9();
-    //testCase10();
+    /*
+    testCase1();
+    testCase2();
+    testCase3();
+    testCase4();
     testCase6();
+    testCase7();
+    testCase8();
+    testCase9();
+    testCase10();
+    testCase11();
+     */
+    printAllPictureInfos();
     return 0;
 }
