@@ -177,7 +177,7 @@ void testCase6(){
 
     FILE *copy = fopen("copy_all_gray.bmp", "wb");
 
-    uint32_t copied = Bitmap_copy(copy, &bitmap, &info);
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap, &info);
     assert_equal(0, copied, "Failed: copy");
 
     Bitmap copymap;
@@ -210,7 +210,7 @@ void testCase7(){
 
     FILE *copy = fopen("copy_all_gray.bmp", "wb");
 
-    uint32_t copied = Bitmap_copy(copy, &bitmap, &info);
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap, &info);
     assert_equal(0, copied, "Failed: copy");
 
     fclose(bmp);
@@ -235,7 +235,7 @@ void testCase8(){
 
     // create bpm picture and copy the scanned bitmap into the new picture
     FILE *copy = fopen("copy_all_gray.bmp", "wb");
-    uint32_t copied = Bitmap_copy(copy, &bitmap, &info);
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap, &info);
     assert_equal(0, copied, "Failed: copy");
 
     // open the file of the copy again in read-mode
@@ -301,7 +301,7 @@ void testCase9(){
 
     // create bpm picture and copy the scanned bitmap into the new picture
     FILE *copy = fopen("copy_all_gray.bmp", "wb");
-    uint32_t copied = Bitmap_copy(copy, &bitmap, &info);
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap, &info);
     assert_equal(0, copied, "Failed: copy");
 
     // open the file of the copy again in read-mode
@@ -360,13 +360,56 @@ void testCase9(){
     Bitmap_destroy(&bitmap);
 }
 
+/**
+ * Alter the bmp all_gray.bmp (bitmap.data only)
+ * and assign a different color from the colorTable
+ */
 void testCase10(){
+    char filepath[] = "all_gray.bmp";
 
-    char filepath[] = "created.bmp";
+    BMP_INFO info;
+    Bitmap bitmap;
 
-    FILE * bmp = fopen(filepath, "wb");
-    uint32_t created = Bitmap_create(bmp, 0,0,0, 4, 4);
-    assert_equal(0, created, "Failed: creating bitmap");
+    // open bmp picture and scan into Bitmap
+    FILE * bmp = fopen(filepath, "rb");
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    assert_equal(0, scanned, "Failed: scan");
+
+    Bitmap_print(&bitmap, filepath, &info);
+
+    for(int i = 0; i < info.data_size; i++){
+        uint8_t * pixel = (uint8_t *)(bitmap.data +i);
+        *pixel = 0;
+    }
+
+    FILE *alteredPic = fopen("all_black.bmp", "wb");
+    uint32_t altered = Bitmap_copyIntoFile(alteredPic, &bitmap, &info);
+    assert_equal(0, altered, "Failed: copy");
+
+}
+
+void testCase10(){
+    char filepath[] = "all_gray.bmp";
+
+    BMP_INFO info;
+    Bitmap bitmap;
+
+    // open bmp picture and scan into Bitmap
+    FILE * bmp = fopen(filepath, "rb");
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap, &info);
+    assert_equal(0, scanned, "Failed: scan");
+
+    Bitmap_print(&bitmap, filepath, &info);
+
+    for(int i = 0; i < info.data_size; i++){
+        uint8_t * pixel = (uint8_t *)(bitmap.data +i);
+        *pixel = 0;
+    }
+
+    FILE *alteredPic = fopen("all_black.bmp", "wb");
+    uint32_t altered = Bitmap_copyIntoFile(alteredPic, &bitmap, &info);
+    assert_equal(0, altered, "Failed: copy");
+
 }
 
 int main(){
@@ -379,7 +422,7 @@ int main(){
     testCase7();
     testCase8();
      */
-    //testCase9();
-    testCase10();
+    testCase9();
+    //testCase10();
     return 0;
 }
