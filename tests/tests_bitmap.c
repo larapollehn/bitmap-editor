@@ -423,6 +423,57 @@ void testCase12(){
 
 }
 
+void testCase13(){
+    char filepath[] = "blackbuck.bmp";
+
+    Bitmap bitmap;
+
+    // open bmp picture and scan into Bitmap
+    FILE * bmp = fopen(filepath, "rb");
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    // create bpm picture and copy the scanned bitmap into the new picture
+    FILE *copy = fopen("copy_blackbuck.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
+    assert_equal(0, copied, "Failed: copy");
+
+    Bitmap_destroy(&bitmap);
+    fclose(bmp);
+}
+
+void testCase14(){
+    char filepath[] = "sample_640_426.bmp";
+
+    Bitmap bitmap;
+
+    // open bmp picture and scan into Bitmap
+    FILE * bmp = fopen(filepath, "rb");
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    // create bpm picture and copy the scanned bitmap into the new picture
+    FILE *copy = fopen("copy_sample_640_426.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
+    assert_equal(0, copied, "Failed: copy");
+
+    Bitmap_destroy(&bitmap);
+    fclose(bmp);
+}
+
+void testCase15(){
+    char filepath[] = "trial.bmp";
+
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "wb");
+
+    Bitmap_create(&bitmap, bmp);
+}
 
 void printAllPictureInfos(){
     char * filepaths[6] = { "sample_640_426.bmp","all_gray.bmp", "dots.bmp", "lena.bmp", "greenland_grid_velo.bmp", "blackbuck.bmp"};
@@ -457,8 +508,11 @@ int main(){
     testCase9();
     testCase10();
     testCase11();
-     */
     testCase12();
+     */
+    //testCase13();
+    //testCase14();
+    testCase15();
     //printAllPictureInfos();
     return 0;
 }

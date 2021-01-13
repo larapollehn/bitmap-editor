@@ -67,8 +67,17 @@ uint32_t Bitmap_copyIntoFile(FILE * dest, Bitmap * bitmap);
  * Prints a bitmap in command Line interface/terminal
  * @param bitmap to be printed
  * @param filepath to the file containing the bitmap
- * @return
+ * @return 0 if successful, 1 if failed
  */
 uint32_t Bitmap_print(Bitmap * bitmap, char * filepath);
+
+/**
+ * Create a bitmap
+ * TEMP: dimensions are 4x1 with 24 bit per px
+ * @param bitmap
+ * @param dest
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_create(Bitmap * bitmap, FILE * dest);
 
 #endif //LIBRARY_BITMAP_H

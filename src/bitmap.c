@@ -55,12 +55,32 @@ uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap) {
 
 
     //initialize the image-data
-    bitmap->data = malloc(sizeof (uint8_t) * size_data);
-    check_mem(bitmap->data);
+    // the size of each data unit depends:
+    // if the colors are indexed trough a colorTable each pixel has 1 byte
+    // otherwise each pixels directly holds the color information and is of bigger size
+    uint32_t pixel_size;
+    if(size_colorTable > 0){
+        pixel_size = sizeof (uint8_t);
+        bitmap->data = malloc(sizeof (uint8_t) * size_data);
+        check_mem(bitmap->data);
+    } else if(bitmap->biBitCount == 16){
+        pixel_size = sizeof (uint16_t);
+        bitmap->data = malloc(sizeof (uint16_t) * size_data);
+        check_mem(bitmap->data);
+    } else if(bitmap->biBitCount == 24){
+        pixel_size = sizeof (uint8_t) * 3;
+        bitmap->data = malloc((sizeof (uint8_t) * 3) * size_data);
+        check_mem(bitmap->data);
+    } else if(bitmap->biBitCount == 32){
+        pixel_size = sizeof (uint32_t);
+        bitmap->data = malloc(sizeof (uint32_t) * size_data);
+        check_mem(bitmap->data);
+    }
+
 
     fseek(source, bitmap->bfOffBits, SEEK_SET);
-    uint32_t readData = fread(bitmap->data, sizeof (uint8_t), size_data, source);
-    check_exit(readData == size_data, "error: trying to read the content of a file");
+    uint32_t readData = fread(bitmap->data, pixel_size, size_data, source);
+    check_exit(readData == (size_data / pixel_size), "error: trying to read the content of a file");
 
     return 0;
 
@@ -84,14 +104,25 @@ uint32_t Bitmap_destroy(Bitmap *bitmap) {
 
 uint32_t Bitmap_copyIntoFile(FILE *dest, Bitmap *bitmap) {
 
-    uint32_t writtenHeader = fwrite(bitmap,  sizeof (uint8_t), (FILEHEADER_SIZE + bitmap->biSize), dest); // copy the file and info-header into the bmp pic
-    check_exit(writtenHeader == (FILEHEADER_SIZE + bitmap->biSize), "Failed: writing headers");
+    uint32_t writtenHeaders = fwrite(bitmap,  sizeof (uint8_t), (FILEHEADER_SIZE + bitmap->biSize), dest); // copy the file and info-header into the bmp pic
+    check_exit(writtenHeaders == (FILEHEADER_SIZE + bitmap->biSize), "Failed: writing headers");
 
     if(bitmap->colorTable_size > 0) {
         uint32_t writtenColorTable = fwrite(bitmap->colorTable, sizeof(Color), bitmap->colorTable_size, dest); // copy only the colorTable (not colorTable_size) into the bmp pic
         check_exit(writtenColorTable == bitmap->colorTable_size, "Failed: writing colorTable");
     }
-    uint32_t writtenData = fwrite(bitmap->data, sizeof (uint8_t), bitmap->data_size, dest); // copy only the data (not data_size) into bmp pic
+    uint32_t pixel_size;
+    if(bitmap->colorTable_size == 0){
+        pixel_size = sizeof (uint8_t);
+    } else if(bitmap->biBitCount == 16){
+        pixel_size = sizeof (uint16_t);
+    } else if(bitmap->biBitCount == 24){
+        pixel_size = sizeof (uint8_t) * 3;
+    } else if(bitmap->biBitCount == 32){
+        pixel_size = sizeof (uint32_t);
+    }
+
+    uint32_t writtenData = fwrite(bitmap->data, pixel_size, bitmap->data_size, dest); // copy only the data (not data_size) into bmp pic
     check_exit(writtenData == bitmap->data_size, "Failed: writing data");
 
     return 0;
@@ -123,4 +154,52 @@ uint32_t Bitmap_print(Bitmap *bitmap, char * filepath) {
     printf("data_size: %d\n", bitmap->data_size);
 
     return 0;
+}
+
+uint32_t Bitmap_create(Bitmap *bitmap, FILE *dest) {
+
+    // these are chosen by me
+    bitmap->biWidth = 40;
+    bitmap->biHeight = 8;
+    bitmap->biBitCount = 24;
+    bitmap->colorTable_size = 0;
+    bitmap->bfType = 0x4D42;  // https://stackoverflow.com/questions/601430/multibyte-character-constants-and-bitmap-file-header-type-constants
+
+    // these are standard
+    bitmap->bfReserved = 0;
+    bitmap->biSize = 40;
+    bitmap->biPlanes = 1;
+    bitmap->biCompression = 0;
+    bitmap->biXPelsPerMeter = 0;
+    bitmap->biYPelsPerMeter = 0;
+    bitmap->biClrUsed = 0;
+    bitmap->biClrImportant = 0;
+
+    // the following must be calculated
+    bitmap->biSizeImage = ((bitmap->biWidth * bitmap->biHeight * bitmap->biBitCount)/ 8); // expects biWidth to be divisible by 4
+    bitmap->bfSize = bitmap->biSizeImage + FILEHEADER_SIZE + bitmap->biSize;
+    bitmap->bfOffBits = FILEHEADER_SIZE + bitmap->biSize;
+
+    // write the now initialized Headers into the destination file
+    uint32_t writtenHeaders = fwrite(bitmap,  sizeof (uint8_t), (FILEHEADER_SIZE + bitmap->biSize), dest); // copy the file and info-header into the bmp pic
+    check_exit(writtenHeaders == (FILEHEADER_SIZE + bitmap->biSize), "Failed: writing headers");
+
+    // write the pixels of bitmap->data into the file
+    for( int i = 0; i < bitmap->biSizeImage; i++){
+        uint8_t blue[] = {0};
+        uint32_t writtenData = fwrite(blue, sizeof(uint8_t), 1, dest); // copy only the data (not data_size) into bmp pic
+        check_exit(writtenData == 1, "Failed: writing data");
+
+        uint8_t green[] = {0};
+        uint32_t writtenData_green = fwrite(green, sizeof(uint8_t), 1, dest); // copy only the data (not data_size) into bmp pic
+        check_exit(writtenData_green == 1, "Failed: writing data");
+
+        uint8_t red[] = {255};
+        uint32_t writtenData_blue = fwrite(red, sizeof(uint8_t), 1, dest); // copy only the data (not data_size) into bmp pic
+        check_exit(writtenData_blue == 1, "Failed: writing data");
+    }
+
+    return 0;
+    error_handling:
+        return 1;
 }
