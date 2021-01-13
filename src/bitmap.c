@@ -186,17 +186,9 @@ uint32_t Bitmap_create(Bitmap *bitmap, FILE *dest) {
 
     // write the pixels of bitmap->data into the file
     for( int i = 0; i < bitmap->biSizeImage; i++){
-        uint8_t blue[] = {0};
-        uint32_t writtenData = fwrite(blue, sizeof(uint8_t), 1, dest); // copy only the data (not data_size) into bmp pic
+        uint8_t bgr[] = {222,128,193};
+        uint32_t writtenData = fwrite(bgr, sizeof(bgr), 1, dest);
         check_exit(writtenData == 1, "Failed: writing data");
-
-        uint8_t green[] = {0};
-        uint32_t writtenData_green = fwrite(green, sizeof(uint8_t), 1, dest); // copy only the data (not data_size) into bmp pic
-        check_exit(writtenData_green == 1, "Failed: writing data");
-
-        uint8_t red[] = {255};
-        uint32_t writtenData_blue = fwrite(red, sizeof(uint8_t), 1, dest); // copy only the data (not data_size) into bmp pic
-        check_exit(writtenData_blue == 1, "Failed: writing data");
     }
 
     return 0;
