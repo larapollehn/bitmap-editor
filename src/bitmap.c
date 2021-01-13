@@ -195,3 +195,14 @@ uint32_t Bitmap_create(Bitmap *bitmap, FILE *dest) {
     error_handling:
         return 1;
 }
+
+uint32_t Bitmap_naive_grayscaling(Bitmap * bitmap) {
+
+    uint8_t blue = *(bitmap->data);
+    uint8_t green = *(bitmap->data +1);
+    uint8_t red = *(bitmap->data +2);
+
+    uint8_t gray_tone = (blue + green + red) /3;
+
+    return 0;
+}

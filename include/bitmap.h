@@ -72,12 +72,19 @@ uint32_t Bitmap_copyIntoFile(FILE * dest, Bitmap * bitmap);
 uint32_t Bitmap_print(Bitmap * bitmap, char * filepath);
 
 /**
- * Create a bitmap
- * TEMP: dimensions are 4x1 with 24 bit per px
+ * Create a bitmap with 24 bit per px
  * @param bitmap
  * @param dest
  * @return 0 if successful, 1 if failed
  */
 uint32_t Bitmap_create(Bitmap * bitmap, FILE * dest);
+
+/**
+ * Grayscaling in the most naive way
+ * color = (red + green + blue) / 3
+ * @param source id the file containing the bitmap image
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_naive_grayscaling(Bitmap * bitmap);
 
 #endif //LIBRARY_BITMAP_H
