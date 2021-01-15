@@ -473,12 +473,98 @@ void testCase15(){
     FILE * bmp = fopen(filepath, "wb");
 
     Bitmap_create(&bitmap, bmp);
+
+    fclose(bmp);
+}
+
+void testCase16(){
+
+    char filepath[] = "trial.bmp";
+
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    Bitmap_print(&bitmap, filepath);
+
+    for(int i = 0; i < bitmap.data_size; i++){
+        printf("%d\n", *(uint8_t *)(bitmap.data + i));
+    }
+
+    Bitmap_naive_grayscaling(&bitmap);
+
+    Bitmap_print(&bitmap, filepath);
+
+    for(int i = 0; i < bitmap.data_size; i++){
+        printf("%d\n", *(uint8_t *)(bitmap.data + i));
+    }
+
+    // create bpm picture and copy the scanned bitmap into the new picture
+    FILE *copy = fopen("gray_trial.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
+    assert_equal(0, copied, "Failed: copy");
+
+    Bitmap_destroy(&bitmap);
+    fclose(bmp);
+    fclose(copy);
+}
+
+void testCase17(){
+
+    char filepath[] = "blackbuck.bmp";
+
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    Bitmap_naive_grayscaling(&bitmap);
+
+    // create bpm picture and copy the scanned bitmap into the new picture
+    FILE *copy = fopen("gray_blackbuck.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
+    assert_equal(0, copied, "Failed: copy");
+
+    Bitmap_destroy(&bitmap);
+    fclose(bmp);
+    fclose(copy);
+}
+
+void testCase18(){
+
+    char filepath[] = "greenland_grid_velo.bmp";
+
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    Bitmap_naive_grayscaling(&bitmap);
+
+    // create bpm picture and copy the scanned bitmap into the new picture
+    FILE *copy = fopen("gray_greenland_grid_velo.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
+    assert_equal(0, copied, "Failed: copy");
+
+    Bitmap_destroy(&bitmap);
+    fclose(bmp);
+    fclose(copy);
 }
 
 void printAllPictureInfos(){
-    char * filepaths[6] = { "sample_640_426.bmp","all_gray.bmp", "dots.bmp", "lena.bmp", "greenland_grid_velo.bmp", "blackbuck.bmp"};
+    char * filepaths[7] = { "sample_640_426.bmp","all_gray.bmp", "dots.bmp", "lena.bmp", "greenland_grid_velo.bmp", "blackbuck.bmp", "trial.bmp"};
 
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < 7; i++){
         Bitmap bitmap;
 
         // open bmp picture and scan into Bitmap
@@ -512,7 +598,10 @@ int main(){
      */
     //testCase13();
     //testCase14();
-    testCase15();
-    //printAllPictureInfos();
+    //testCase15();
+    //testCase16();
+    //testCase17();
+    //testCase18();
+    printAllPictureInfos();
     return 0;
 }

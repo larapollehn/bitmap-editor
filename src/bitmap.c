@@ -80,7 +80,7 @@ uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap) {
 
     fseek(source, bitmap->bfOffBits, SEEK_SET);
     uint32_t readData = fread(bitmap->data, pixel_size, size_data, source);
-    check_exit(readData == (size_data / pixel_size), "error: trying to read the content of a file");
+    //check_exit(readData == (size_data / pixel_size), "error: trying to read the content of a file");
 
     return 0;
 
@@ -91,7 +91,7 @@ uint32_t Bitmap_scan(FILE *source, Bitmap * bitmap) {
 
 uint32_t Bitmap_destroy(Bitmap *bitmap) {
 
-    if(bitmap->colorTable){
+    if(bitmap->colorTable != NULL){
         free(bitmap->colorTable);
     }
 
@@ -159,11 +159,12 @@ uint32_t Bitmap_print(Bitmap *bitmap, char * filepath) {
 uint32_t Bitmap_create(Bitmap *bitmap, FILE *dest) {
 
     // these are chosen by me
-    bitmap->biWidth = 40;
-    bitmap->biHeight = 8;
+    bitmap->biWidth = 4;
+    bitmap->biHeight = 2;
     bitmap->biBitCount = 24;
     bitmap->colorTable_size = 0;
     bitmap->bfType = 0x4D42;  // https://stackoverflow.com/questions/601430/multibyte-character-constants-and-bitmap-file-header-type-constants
+    bitmap->colorTable = NULL;
 
     // these are standard
     bitmap->bfReserved = 0;
@@ -179,6 +180,7 @@ uint32_t Bitmap_create(Bitmap *bitmap, FILE *dest) {
     bitmap->biSizeImage = ((bitmap->biWidth * bitmap->biHeight * bitmap->biBitCount)/ 8); // expects biWidth to be divisible by 4
     bitmap->bfSize = bitmap->biSizeImage + FILEHEADER_SIZE + bitmap->biSize;
     bitmap->bfOffBits = FILEHEADER_SIZE + bitmap->biSize;
+    bitmap->data_size = bitmap->biSizeImage;
 
     // write the now initialized Headers into the destination file
     uint32_t writtenHeaders = fwrite(bitmap,  sizeof (uint8_t), (FILEHEADER_SIZE + bitmap->biSize), dest); // copy the file and info-header into the bmp pic
@@ -198,11 +200,36 @@ uint32_t Bitmap_create(Bitmap *bitmap, FILE *dest) {
 
 uint32_t Bitmap_naive_grayscaling(Bitmap * bitmap) {
 
-    uint8_t blue = *(bitmap->data);
-    uint8_t green = *(bitmap->data +1);
-    uint8_t red = *(bitmap->data +2);
+    for(int i = 0; i < bitmap->biSizeImage; i+= 3){
+        uint8_t * blue = (bitmap->data + i);
+        uint8_t * green = (bitmap->data + i + 1);
+        uint8_t * red = (bitmap->data + i + 2);
 
-    uint8_t gray_tone = (blue + green + red) /3;
+        uint8_t gray_tone = (*blue + *green + *red) / 3;
+
+        *blue = gray_tone;
+        *green = gray_tone;
+        *red = gray_tone;
+    }
 
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
