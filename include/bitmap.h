@@ -81,10 +81,23 @@ uint32_t Bitmap_create(Bitmap * bitmap, FILE * dest);
 
 /**
  * Grayscaling in the most naive way
- * color = (red + green + blue) / 3
+ * gray_tone = (red + green + blue) / 3
+ * For bitmap pictures without a colorTable and 24 bpp
+ * The actual bitmap.data (pixels) are changed to the gray_tone
  * @param source id the file containing the bitmap image
  * @return 0 if successful, 1 if failed
  */
-uint32_t Bitmap_naive_grayscaling(Bitmap * bitmap);
+uint32_t Bitmap_naive_grayscaling_px(Bitmap * bitmap);
+
+/**
+ * Grayscaling in the most naive way
+ * gray_tone = (red + green + blue) / 3
+ * For bitmap pictures with a colorTable
+ * The entries of the colorTable are changed to the gray_tone
+ * @param source id the file containing the bitmap image
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_naive_grayscaling_ct(Bitmap * bitmap);
+
 
 #endif //LIBRARY_BITMAP_H

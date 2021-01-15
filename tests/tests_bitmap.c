@@ -488,18 +488,10 @@ void testCase16(){
     uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
-    Bitmap_print(&bitmap, filepath);
+    Bitmap_naive_grayscaling_px(&bitmap);
 
     for(int i = 0; i < bitmap.data_size; i++){
-        printf("%d\n", *(uint8_t *)(bitmap.data + i));
-    }
-
-    Bitmap_naive_grayscaling(&bitmap);
-
-    Bitmap_print(&bitmap, filepath);
-
-    for(int i = 0; i < bitmap.data_size; i++){
-        printf("%d\n", *(uint8_t *)(bitmap.data + i));
+        assert_equal(181, *(uint8_t *)(bitmap.data + i), "Grayscale did not work");
     }
 
     // create bpm picture and copy the scanned bitmap into the new picture
@@ -524,7 +516,7 @@ void testCase17(){
     uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
-    Bitmap_naive_grayscaling(&bitmap);
+    Bitmap_naive_grayscaling_px(&bitmap);
 
     // create bpm picture and copy the scanned bitmap into the new picture
     FILE *copy = fopen("gray_blackbuck.bmp", "wb");
@@ -548,7 +540,7 @@ void testCase18(){
     uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
-    Bitmap_naive_grayscaling(&bitmap);
+    Bitmap_naive_grayscaling_px(&bitmap);
 
     // create bpm picture and copy the scanned bitmap into the new picture
     FILE *copy = fopen("gray_greenland_grid_velo.bmp", "wb");
@@ -559,6 +551,42 @@ void testCase18(){
     Bitmap_destroy(&bitmap);
     fclose(bmp);
     fclose(copy);
+}
+
+void testCase19(){
+    char filepath[] = "dots.bmp";
+
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    Bitmap_naive_grayscaling_ct(&bitmap);
+
+    FILE *copy = fopen("gray_dots.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
+    assert_equal(0, copied, "Failed: copy");
+}
+
+void testCase20(){
+    char filepath[] = "lena.bmp";
+
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    Bitmap_naive_grayscaling_ct(&bitmap);
+
+    FILE *copy = fopen("gray_lena.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
+    assert_equal(0, copied, "Failed: copy");
 }
 
 void printAllPictureInfos(){
@@ -582,6 +610,8 @@ void printAllPictureInfos(){
 }
 
 
+
+
 int main(){
     /*
     testCase1();
@@ -602,6 +632,8 @@ int main(){
     //testCase16();
     //testCase17();
     //testCase18();
-    printAllPictureInfos();
+    //testCase19();
+    testCase20();
+    //printAllPictureInfos();
     return 0;
 }

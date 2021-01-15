@@ -111,18 +111,8 @@ uint32_t Bitmap_copyIntoFile(FILE *dest, Bitmap *bitmap) {
         uint32_t writtenColorTable = fwrite(bitmap->colorTable, sizeof(Color), bitmap->colorTable_size, dest); // copy only the colorTable (not colorTable_size) into the bmp pic
         check_exit(writtenColorTable == bitmap->colorTable_size, "Failed: writing colorTable");
     }
-    uint32_t pixel_size;
-    if(bitmap->colorTable_size == 0){
-        pixel_size = sizeof (uint8_t);
-    } else if(bitmap->biBitCount == 16){
-        pixel_size = sizeof (uint16_t);
-    } else if(bitmap->biBitCount == 24){
-        pixel_size = sizeof (uint8_t) * 3;
-    } else if(bitmap->biBitCount == 32){
-        pixel_size = sizeof (uint32_t);
-    }
 
-    uint32_t writtenData = fwrite(bitmap->data, pixel_size, bitmap->data_size, dest); // copy only the data (not data_size) into bmp pic
+    uint32_t writtenData = fwrite(bitmap->data, sizeof (uint8_t), bitmap->data_size, dest); // copy only the data (not data_size) into bmp pic
     check_exit(writtenData == bitmap->data_size, "Failed: writing data");
 
     return 0;
@@ -198,9 +188,9 @@ uint32_t Bitmap_create(Bitmap *bitmap, FILE *dest) {
         return 1;
 }
 
-uint32_t Bitmap_naive_grayscaling(Bitmap * bitmap) {
+uint32_t Bitmap_naive_grayscaling_px(Bitmap * bitmap) {
 
-    for(int i = 0; i < bitmap->biSizeImage; i+= 3){
+    for(int i = 0; i < bitmap->biSizeImage; i+=3){
         uint8_t * blue = (bitmap->data + i);
         uint8_t * green = (bitmap->data + i + 1);
         uint8_t * red = (bitmap->data + i + 2);
@@ -210,6 +200,23 @@ uint32_t Bitmap_naive_grayscaling(Bitmap * bitmap) {
         *blue = gray_tone;
         *green = gray_tone;
         *red = gray_tone;
+    }
+
+    return 0;
+}
+
+uint32_t Bitmap_naive_grayscaling_ct(Bitmap *bitmap) {
+
+    for(int i = 0; i < bitmap->colorTable_size; i++){
+        uint8_t blue = (bitmap->colorTable + i)->blue;
+        uint8_t green = (bitmap->colorTable + i)->green;
+        uint8_t red = (bitmap->colorTable + i)->red;
+
+        uint8_t gray_tone = (blue + green + red) / 3;
+
+        (bitmap->colorTable + i)->blue = gray_tone;
+        (bitmap->colorTable + i)->green = gray_tone;
+        (bitmap->colorTable + i)->red = gray_tone;
     }
 
     return 0;
