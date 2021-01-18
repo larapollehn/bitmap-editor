@@ -589,10 +589,58 @@ void testCase20(){
     assert_equal(0, copied, "Failed: copy");
 }
 
-void printAllPictureInfos(){
-    char * filepaths[7] = { "sample_640_426.bmp","all_gray.bmp", "dots.bmp", "lena.bmp", "greenland_grid_velo.bmp", "blackbuck.bmp", "trial.bmp"};
+void testCase21(){
+    char filepath[] = "sample_640_426.bmp";
 
-    for(int i = 0; i < 7; i++){
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    Bitmap_naive_grayscaling_px(&bitmap);
+
+    FILE *copy = fopen("gray_sample_640_426.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
+    assert_equal(0, copied, "Failed: copy");
+}
+
+void testCase22(){
+    char filepath[] = "bmp_24.bmp";
+
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    Bitmap_naive_grayscaling_px(&bitmap);
+
+    FILE *copy = fopen("gray_bmp_24.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(copy, &bitmap);
+    assert_equal(0, copied, "Failed: copy");
+}
+
+void testCase23(){
+    char filepath[] = "square.bmp";
+
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "wb");
+
+    Bitmap_draw_square(&bitmap, bmp);
+
+    fclose(bmp);
+}
+
+void printAllPictureInfos(){
+    char * filepaths[8] = { "bmp_24.bmp","sample_640_426.bmp","all_gray.bmp", "dots.bmp", "lena.bmp", "greenland_grid_velo.bmp", "blackbuck.bmp", "trial.bmp"};
+
+    for(int i = 0; i < 8; i++){
         Bitmap bitmap;
 
         // open bmp picture and scan into Bitmap
@@ -633,7 +681,10 @@ int main(){
     //testCase17();
     //testCase18();
     //testCase19();
-    testCase20();
+    //testCase20();
+    //testCase21();
+    //testCase22();
+    testCase23();
     //printAllPictureInfos();
     return 0;
 }

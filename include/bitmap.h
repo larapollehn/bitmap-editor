@@ -99,5 +99,11 @@ uint32_t Bitmap_naive_grayscaling_px(Bitmap * bitmap);
  */
 uint32_t Bitmap_naive_grayscaling_ct(Bitmap * bitmap);
 
+/**
+ * Create a bitmap picture with a square object in it
+ * @param bitmap
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_draw_square(Bitmap * bitmap, FILE * dest);
 
 #endif //LIBRARY_BITMAP_H

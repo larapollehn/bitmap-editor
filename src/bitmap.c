@@ -190,7 +190,12 @@ uint32_t Bitmap_create(Bitmap *bitmap, FILE *dest) {
 
 uint32_t Bitmap_naive_grayscaling_px(Bitmap * bitmap) {
 
-    for(int i = 0; i < bitmap->biSizeImage; i+=3){
+    uint32_t size = bitmap->biSizeImage;
+    if(bitmap->biSizeImage == 0){
+        size = bitmap->data_size;
+    }
+
+    for(int i = 0; i < size; i+=3){
         uint8_t * blue = (bitmap->data + i);
         uint8_t * green = (bitmap->data + i + 1);
         uint8_t * red = (bitmap->data + i + 2);
@@ -219,6 +224,73 @@ uint32_t Bitmap_naive_grayscaling_ct(Bitmap *bitmap) {
         (bitmap->colorTable + i)->red = gray_tone;
     }
 
+    return 0;
+}
+
+uint32_t Bitmap_draw_square(Bitmap *bitmap, FILE *dest) {
+    // these are chosen by me
+    bitmap->biWidth = 8;
+    bitmap->biHeight = 8;
+    bitmap->biBitCount = 24;
+    bitmap->colorTable_size = 0;
+    bitmap->bfType = 0x4D42;  // https://stackoverflow.com/questions/601430/multibyte-character-constants-and-bitmap-file-header-type-constants
+    bitmap->colorTable = NULL;
+
+    // these are standard
+    bitmap->bfReserved = 0;
+    bitmap->biSize = 40;
+    bitmap->biPlanes = 1;
+    bitmap->biCompression = 0;
+    bitmap->biXPelsPerMeter = 0;
+    bitmap->biYPelsPerMeter = 0;
+    bitmap->biClrUsed = 0;
+    bitmap->biClrImportant = 0;
+
+    // the following must be calculated
+    bitmap->biSizeImage = ((bitmap->biWidth * bitmap->biHeight * bitmap->biBitCount)/ 8); // expects biWidth to be divisible by 4
+    bitmap->bfSize = bitmap->biSizeImage + FILEHEADER_SIZE + bitmap->biSize;
+    bitmap->bfOffBits = FILEHEADER_SIZE + bitmap->biSize;
+    bitmap->data_size = bitmap->biSizeImage;
+
+    // write the now initialized Headers into the destination file
+    uint32_t writtenHeaders = fwrite(bitmap,  sizeof (uint8_t), (FILEHEADER_SIZE + bitmap->biSize), dest); // copy the file and info-header into the bmp pic
+    check_exit(writtenHeaders == (FILEHEADER_SIZE + bitmap->biSize), "Failed: writing headers");
+
+
+    uint32_t left = 0; // 1
+    uint32_t right = bitmap->biWidth -1; // 4
+
+    uint8_t square[] = {255, 0, 0};
+    uint8_t background[] = {222, 128, 193};
+
+    // write the pixels of bitmap->data into the file
+    for( int i = 0; i < bitmap->biSizeImage; i++){
+        if(i == left){
+            // left-most pixel
+            uint32_t writtenData = fwrite(square, sizeof(square), 1, dest);
+            check_exit(writtenData == 1, "Failed: writing data");
+            left += bitmap->biWidth;
+        } else if(i == right) {
+            //right-most pixel
+            uint32_t writtenData = fwrite(square, sizeof(square), 1, dest);
+            check_exit(writtenData == 1, "Failed: writing data");
+            right += bitmap->biWidth;
+        } else if((i < bitmap->biWidth) || (i > ((bitmap->biWidth * bitmap->biHeight) - bitmap->biWidth))){
+            // first and last row
+            uint32_t writtenData = fwrite(square, sizeof(square), 1, dest);
+            check_exit(writtenData == 1, "Failed: writing data");
+        }else {
+            // inner square/background
+            uint32_t writtenData = fwrite(background, sizeof(background), 1, dest);
+            check_exit(writtenData == 1, "Failed: writing data");
+        }
+    }
+
+
+
+    return 0;
+    error_handling:
+    return 1;
     return 0;
 }
 
