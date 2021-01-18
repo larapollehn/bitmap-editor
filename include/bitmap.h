@@ -74,7 +74,7 @@ uint32_t Bitmap_print(Bitmap * bitmap, char * filepath);
 /**
  * Create a bitmap with 24 bit per px
  * @param bitmap
- * @param dest
+ * @param dest file that will contain the bitmap
  * @return 0 if successful, 1 if failed
  */
 uint32_t Bitmap_create(Bitmap * bitmap, FILE * dest);
@@ -100,10 +100,21 @@ uint32_t Bitmap_naive_grayscaling_px(Bitmap * bitmap);
 uint32_t Bitmap_naive_grayscaling_ct(Bitmap * bitmap);
 
 /**
- * Create a bitmap picture with a square object in it
+ * Create a bitmap picture with an unfilled square around
+ * Start point of painting is always O(0/0) in the upper left corner
  * @param bitmap
+ * @param dest file that will contain the bitmap
  * @return 0 if successful, 1 if failed
  */
 uint32_t Bitmap_draw_square(Bitmap * bitmap, FILE * dest);
+
+/**
+ * Create a bitmap with a filled triangle on it
+ * Start point of painting is always O(0/0) in the upper left corner
+ * @param bitmap
+ * @param dest file that will contain the bitmap
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_draw_triangle(Bitmap * bitmap, FILE * dest);
 
 #endif //LIBRARY_BITMAP_H

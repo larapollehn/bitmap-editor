@@ -239,7 +239,7 @@ uint32_t Bitmap_draw_square(Bitmap *bitmap, FILE *dest) {
     uint32_t lineHeight = 3;
     uint32_t left = 0;
     uint32_t right = bitmap->biWidth - lineHeight;
-    uint8_t square[] = {0, 0, 0};
+    uint8_t square[] = {255, 255, 255};
     uint8_t background[] = {222, 128, 193};
 
     // these are standard
@@ -290,6 +290,64 @@ uint32_t Bitmap_draw_square(Bitmap *bitmap, FILE *dest) {
 
         if(i == (right + lineHeight)){
             right += bitmap->biWidth ;
+        }
+    }
+
+    return 0;
+    error_handling:
+        return 1;
+}
+
+uint32_t Bitmap_draw_triangle(Bitmap *bitmap, FILE *dest) {
+    // these are chosen by me
+    bitmap->biWidth = 400;
+    bitmap->biHeight = 400;
+    bitmap->biBitCount = 24;
+    bitmap->colorTable_size = 0;
+    bitmap->bfType = 0x4D42;  // https://stackoverflow.com/questions/601430/multibyte-character-constants-and-bitmap-file-header-type-constants
+    bitmap->colorTable = NULL;
+    // chosen by me for painting the data
+    uint32_t row = 1;
+    uint32_t start = 0;
+    uint32_t end = start + bitmap->biWidth - ( 2 * row);
+    uint8_t triangle[] = {222, 128, 193};
+    uint8_t background[] = {255, 255, 255};
+
+    // these are standard
+    bitmap->bfReserved = 0;
+    bitmap->biSize = 40;
+    bitmap->biPlanes = 1;
+    bitmap->biCompression = 0;
+    bitmap->biXPelsPerMeter = 0;
+    bitmap->biYPelsPerMeter = 0;
+    bitmap->biClrUsed = 0;
+    bitmap->biClrImportant = 0;
+
+    // the following must be calculated
+    bitmap->biSizeImage = ((bitmap->biWidth * bitmap->biHeight * bitmap->biBitCount)/ 8); // expects biWidth to be divisible by 4
+    bitmap->bfSize = bitmap->biSizeImage + FILEHEADER_SIZE + bitmap->biSize;
+    bitmap->bfOffBits = FILEHEADER_SIZE + bitmap->biSize;
+    bitmap->data_size = bitmap->biSizeImage;
+
+    // write the now initialized Headers into the destination file
+    uint32_t writtenHeaders = fwrite(bitmap,  sizeof (uint8_t), (FILEHEADER_SIZE + bitmap->biSize), dest); // copy the file and info-header into the bmp pic
+    check_exit(writtenHeaders == (FILEHEADER_SIZE + bitmap->biSize), "Failed: writing headers");
+
+    // write the pixels of bitmap->data into the file
+    for( int i = 0; i < bitmap->biSizeImage; i++){
+
+        if((i >= start) && (i <= end)) {
+            uint32_t writtenData = fwrite(triangle, sizeof(triangle), 1, dest);
+            check_exit(writtenData == 1, "Failed: writing data");
+        } else {
+            uint32_t writtenData = fwrite(background, sizeof(background), 1, dest);
+            check_exit(writtenData == 1, "Failed: writing data");
+        }
+
+        if(i == end){
+            row++;
+            start += bitmap->biWidth + 1;
+            end = start + bitmap->biWidth - (2 * row);
         }
     }
 

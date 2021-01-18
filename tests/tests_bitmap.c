@@ -637,6 +637,18 @@ void testCase23(){
     fclose(bmp);
 }
 
+void testCase24(){
+    char filepath[] = "triangle.bmp";
+
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "wb");
+
+    Bitmap_draw_triangle(&bitmap, bmp);
+
+    fclose(bmp);
+}
+
 void printAllPictureInfos(){
     char * filepaths[8] = { "bmp_24.bmp","sample_640_426.bmp","all_gray.bmp", "dots.bmp", "lena.bmp", "greenland_grid_velo.bmp", "blackbuck.bmp", "trial.bmp"};
 
@@ -685,6 +697,7 @@ int main(){
     //testCase21();
     //testCase22();
     testCase23();
+    //testCase24();
     //printAllPictureInfos();
     return 0;
 }
