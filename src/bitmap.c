@@ -229,8 +229,8 @@ uint32_t Bitmap_naive_grayscaling_ct(Bitmap *bitmap) {
 
 uint32_t Bitmap_draw_square(Bitmap *bitmap, FILE *dest) {
     // these are chosen by me
-    bitmap->biWidth = 8;
-    bitmap->biHeight = 8;
+    bitmap->biWidth = 20;
+    bitmap->biHeight = 20;
     bitmap->biBitCount = 24;
     bitmap->colorTable_size = 0;
     bitmap->bfType = 0x4D42;  // https://stackoverflow.com/questions/601430/multibyte-character-constants-and-bitmap-file-header-type-constants
@@ -256,26 +256,26 @@ uint32_t Bitmap_draw_square(Bitmap *bitmap, FILE *dest) {
     uint32_t writtenHeaders = fwrite(bitmap,  sizeof (uint8_t), (FILEHEADER_SIZE + bitmap->biSize), dest); // copy the file and info-header into the bmp pic
     check_exit(writtenHeaders == (FILEHEADER_SIZE + bitmap->biSize), "Failed: writing headers");
 
-
-    uint32_t left = 0; // 1
-    uint32_t right = bitmap->biWidth -1; // 4
+    uint32_t lineHeight = 4;
+    uint32_t left = 0;
+    uint32_t right = bitmap->biWidth - lineHeight;
 
     uint8_t square[] = {255, 0, 0};
     uint8_t background[] = {222, 128, 193};
 
     // write the pixels of bitmap->data into the file
     for( int i = 0; i < bitmap->biSizeImage; i++){
-        if(i == left){
+        if(i == left || ((i >= left) &&(i < (left + lineHeight)))){
             // left-most pixel
             uint32_t writtenData = fwrite(square, sizeof(square), 1, dest);
             check_exit(writtenData == 1, "Failed: writing data");
-            left += bitmap->biWidth;
-        } else if(i == right) {
+
+        } else if(i == right || ((i >= right) && (i < (right + lineHeight)))) {
             //right-most pixel
             uint32_t writtenData = fwrite(square, sizeof(square), 1, dest);
             check_exit(writtenData == 1, "Failed: writing data");
-            right += bitmap->biWidth;
-        } else if((i < bitmap->biWidth) || (i > ((bitmap->biWidth * bitmap->biHeight) - bitmap->biWidth))){
+
+        } else if((i < (bitmap->biWidth * lineHeight)) || (i > ((bitmap->biWidth * bitmap->biHeight) - (bitmap->biWidth * lineHeight)))){
             // first and last row
             uint32_t writtenData = fwrite(square, sizeof(square), 1, dest);
             check_exit(writtenData == 1, "Failed: writing data");
@@ -283,6 +283,14 @@ uint32_t Bitmap_draw_square(Bitmap *bitmap, FILE *dest) {
             // inner square/background
             uint32_t writtenData = fwrite(background, sizeof(background), 1, dest);
             check_exit(writtenData == 1, "Failed: writing data");
+        }
+
+        if(i == (left +lineHeight)){
+            left += bitmap->biWidth;
+        }
+
+        if(i == (right + lineHeight)){
+            right += bitmap->biWidth ;
         }
     }
 
