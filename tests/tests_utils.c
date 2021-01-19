@@ -66,11 +66,128 @@ void testCase5(){
     assert_equal(29, distance, "Failed to calculate the distance of two points")
 }
 
+
+void testCase6(){
+    // Triangle Points
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
+
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 5;
+
+    Point B;
+    B.x_posn = 7;
+    B.y_posn = 5;
+
+    // Point in question
+    Point P;
+    P.x_posn = 4;
+    P.y_posn = 3;
+
+    uint8_t inTriangle = point_in_triangle(&C, &A, &B, &P);
+    assert_equal(1, inTriangle, "failed: point_in_triangle");
+}
+void testCase7(){
+    // Triangle Points
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
+
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 5;
+
+    Point B;
+    B.x_posn = 7;
+    B.y_posn = 5;
+
+    // Point in question
+    Point P;
+    P.x_posn = 45;
+    P.y_posn = 33;
+
+    uint8_t inTriangle = point_in_triangle(&C, &A, &B, &P);
+    assert_equal(0, inTriangle, "failed: point_in_triangle");
+}
+void testCase8(){
+    // Triangle Points
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
+
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 5;
+
+    Point B;
+    B.x_posn = 7;
+    B.y_posn = 5;
+
+    // Point in question
+    Point P;
+    P.x_posn = 1;
+    P.y_posn = 5;
+
+    uint8_t inTriangle = point_in_triangle(&C, &A, &B, &P);
+    assert_equal(1, inTriangle, "failed: point_in_triangle");
+}
+void testCase9(){
+    // Triangle Points
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
+
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 5;
+
+    Point B;
+    B.x_posn = 7;
+    B.y_posn = 5;
+
+    // Point in question
+    Point P;
+    P.x_posn = 4;
+    P.y_posn = 0;
+
+    uint8_t inTriangle = point_in_triangle(&C, &A, &B, &P);
+    assert_equal(1, inTriangle, "failed: point_in_triangle");
+}
+void testCase10(){
+    // Triangle Points
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
+
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 5;
+
+    Point B;
+    B.x_posn = 7;
+    B.y_posn = 5;
+
+    // Point in question
+    Point P;
+    P.x_posn = 7;
+    P.y_posn = 5;
+
+    uint8_t inTriangle = point_in_triangle(&C, &A, &B, &P);
+    assert_equal(1, inTriangle, "failed: point_in_triangle");
+}
+
 int main(){
     //testCase1();
     testCase2();
     testCase3();
     testCase4();
     testCase5();
+    testCase6();
+    testCase7();
+    testCase8();
+    testCase9();
+    testCase10();
     return 0;
 }

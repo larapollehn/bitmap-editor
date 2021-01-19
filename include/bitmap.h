@@ -115,7 +115,20 @@ uint32_t Bitmap_draw_square(Bitmap * bitmap, FILE * dest);
  * @param dest file that will contain the bitmap
  * @return 0 if successful, 1 if failed
  */
-uint32_t Bitmap_draw_triangle(Bitmap * bitmap, FILE * dest);
+uint32_t Bitmap_draw_triangle_naive(Bitmap * bitmap, FILE * dest);
+
+/**
+ *
+ * @param bitmap
+ * @param dest file that will contain the bitmap
+ * @param A point of triangle
+ * @param B point of triangle
+ * @param C point of triangle
+ * @param width of the bitmap
+ * @param height of the bitmap
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_draw_triangle(Bitmap * bitmap, FILE * dest, Point * A, Point * B, Point * C, uint32_t width, uint32_t height);
 
 /**
  * Draw circle around point with given radius in bitmap picture

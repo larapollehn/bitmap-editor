@@ -56,4 +56,16 @@ typedef struct Point{
  */
 uint32_t distance_ptp(Point * first, Point * second);
 
+/**
+ * Check if a point is within a triangle
+ * uses dot product
+ * A, B, C are placed counterclockwise in the stated order
+ * @param A is a Point of the triangle
+ * @param B is a Point of the triangle
+ * @param C is a Point of the triangle
+ * @param P is a Point
+ * @return 1 if true, 0 if false
+ */
+uint8_t point_in_triangle(Point * A, Point * B, Point * C, Point * P);
+
 #endif //BITMAP_EDITOR_UTILS_H

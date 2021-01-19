@@ -644,7 +644,7 @@ void testCase24(){
 
     FILE * bmp = fopen(filepath, "wb");
 
-    Bitmap_draw_triangle(&bitmap, bmp);
+    Bitmap_draw_triangle_naive(&bitmap, bmp);
 
     fclose(bmp);
 }
@@ -670,6 +670,48 @@ void printAllPictureInfos(){
 }
 
 
+
+void testCase25(){
+
+    Bitmap bitmap;
+
+    char filepath[] = "circle.bmp";
+    FILE * bmp = fopen(filepath, "wb");
+
+    Point origin;
+    origin.x_posn = 4;
+    origin.y_posn = 4;
+
+    uint32_t drawn = Bitmap_draw_circle(&bitmap, bmp, &origin, 3, 8, 8);
+}
+
+void testCase26(){
+
+    Bitmap bitmap;
+
+    char filepath[] = "circle_2.bmp";
+    FILE * bmp = fopen(filepath, "wb");
+
+    Point origin;
+    origin.x_posn = 8;
+    origin.y_posn = 8;
+
+    uint32_t drawn = Bitmap_draw_circle(&bitmap, bmp, &origin, 4, 16, 16);
+}
+
+void testCase28(){
+
+    Bitmap bitmap;
+
+    char filepath[] = "circle_3.bmp";
+    FILE * bmp = fopen(filepath, "wb");
+
+    Point origin;
+    origin.x_posn = 20;
+    origin.y_posn = 20;
+
+    uint32_t drawn = Bitmap_draw_circle(&bitmap, bmp, &origin, 50, 200, 200);
+}
 
 
 int main(){
@@ -697,7 +739,12 @@ int main(){
     //testCase21();
     //testCase22();
     //testCase23();
-    testCase24();
+    //testCase24();
+    //testCase26();
+    //testCase27();
+    testCase28();
     //printAllPictureInfos();
+
+    testCase25();
     return 0;
 }
