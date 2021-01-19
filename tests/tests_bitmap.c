@@ -696,8 +696,8 @@ int main(){
     //testCase20();
     //testCase21();
     //testCase22();
-    testCase23();
-    //testCase24();
+    //testCase23();
+    testCase24();
     //printAllPictureInfos();
     return 0;
 }

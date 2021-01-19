@@ -42,4 +42,18 @@
 /* https://stackoverflow.com/questions/3553296/sizeof-single-struct-member-in-c */
 #define member_size(type, member) sizeof(((type *)0)->member)
 
+typedef struct Point{
+    uint32_t x_posn;
+    uint32_t y_posn;
+} Point;
+
+/**
+ * calculates the distance between two points in a 2d space
+ * uses pythagoras
+ * @param first point
+ * @param second point
+ * @return distance, rounded to the nearest integer
+ */
+uint32_t distance_ptp(Point * first, Point * second);
+
 #endif //BITMAP_EDITOR_UTILS_H

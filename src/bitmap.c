@@ -229,14 +229,14 @@ uint32_t Bitmap_naive_grayscaling_ct(Bitmap *bitmap) {
 
 uint32_t Bitmap_draw_square(Bitmap *bitmap, FILE *dest) {
     // these are chosen by me
-    bitmap->biWidth = 40;
-    bitmap->biHeight = 40;
+    bitmap->biWidth = 400;
+    bitmap->biHeight = 400;
     bitmap->biBitCount = 24;
     bitmap->colorTable_size = 0;
     bitmap->bfType = 0x4D42;  // https://stackoverflow.com/questions/601430/multibyte-character-constants-and-bitmap-file-header-type-constants
     bitmap->colorTable = NULL;
     // chosen by me for painting the data
-    uint32_t lineHeight = 3;
+    uint32_t lineHeight = 80;
     uint32_t left = 0;
     uint32_t right = bitmap->biWidth - lineHeight;
     uint8_t square[] = {255, 255, 255};
@@ -300,8 +300,8 @@ uint32_t Bitmap_draw_square(Bitmap *bitmap, FILE *dest) {
 
 uint32_t Bitmap_draw_triangle(Bitmap *bitmap, FILE *dest) {
     // these are chosen by me
-    bitmap->biWidth = 400;
-    bitmap->biHeight = 400;
+    bitmap->biWidth = 8;
+    bitmap->biHeight = 8;
     bitmap->biBitCount = 24;
     bitmap->colorTable_size = 0;
     bitmap->bfType = 0x4D42;  // https://stackoverflow.com/questions/601430/multibyte-character-constants-and-bitmap-file-header-type-constants
@@ -350,6 +350,51 @@ uint32_t Bitmap_draw_triangle(Bitmap *bitmap, FILE *dest) {
             end = start + bitmap->biWidth - (2 * row);
         }
     }
+
+    return 0;
+    error_handling:
+        return 1;
+}
+
+uint32_t Bitmap_draw_circle(Bitmap *bitmap, FILE *dest, Point * origin, uint32_t radius, uint32_t width, uint32_t height) {
+
+    uint32_t initializeHeaders = Bitmap_initialize_header(bitmap, dest, width, height);
+    check_exit(initializeHeaders == 0, "Failed to initialize the bitmap headers");
+
+
+
+    return 0;
+    error_handling:
+        return 1;
+}
+
+uint32_t Bitmap_initialize_header(Bitmap *bitmap, FILE * dest, uint32_t width, uint32_t height) {
+    // these are chosen by me
+    bitmap->biWidth = width;
+    bitmap->biHeight = height;
+    bitmap->biBitCount = 24;
+    bitmap->colorTable_size = 0;
+    bitmap->bfType = 0x4D42;  // https://stackoverflow.com/questions/601430/multibyte-character-constants-and-bitmap-file-header-type-constants
+    bitmap->colorTable = NULL;
+
+    // these are standard
+    bitmap->bfReserved = 0;
+    bitmap->biSize = 40;
+    bitmap->biPlanes = 1;
+    bitmap->biCompression = 0;
+    bitmap->biXPelsPerMeter = 0;
+    bitmap->biYPelsPerMeter = 0;
+    bitmap->biClrUsed = 0;
+    bitmap->biClrImportant = 0;
+
+    // the following must be calculated
+    bitmap->biSizeImage = ((bitmap->biWidth * bitmap->biHeight * bitmap->biBitCount)/ 8); // expects biWidth to be divisible by 4
+    bitmap->bfSize = bitmap->biSizeImage + FILEHEADER_SIZE + bitmap->biSize;
+    bitmap->bfOffBits = FILEHEADER_SIZE + bitmap->biSize;
+    bitmap->data_size = bitmap->biSizeImage;
+
+    uint32_t writtenHeaders = fwrite(bitmap,  sizeof (uint8_t), (FILEHEADER_SIZE + bitmap->biSize), dest); // copy the file and info-header into the bmp pic
+    check_exit(writtenHeaders == (FILEHEADER_SIZE + bitmap->biSize), "Failed: writing headers");
 
     return 0;
     error_handling:

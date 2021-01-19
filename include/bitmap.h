@@ -117,4 +117,28 @@ uint32_t Bitmap_draw_square(Bitmap * bitmap, FILE * dest);
  */
 uint32_t Bitmap_draw_triangle(Bitmap * bitmap, FILE * dest);
 
+/**
+ * Draw circle around point with given radius in bitmap picture
+ * @param bitmap
+ * @param dest file that will contain the bitmap
+ * @param origin Point where the circle originates
+ * @param radius of the circle
+ * @param width of the bitmap
+ * @param height of the bitmap
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_draw_circle(Bitmap * bitmap, FILE * dest, Point * origin, uint32_t radius, uint32_t width, uint32_t height);
+
+/**
+ * Init the bitmap headers
+ * for bitmaps without colorTable and 24 bpp
+ * data will not be initialized
+ * @param bitmap whose headers will be initialized
+ * @param dest file that will contain the bitmap
+ * @param width of the bitmap
+ * @param height of the bitmap
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_initialize_header(Bitmap * bitmap, FILE * dest, uint32_t width, uint32_t height);
+
 #endif //LIBRARY_BITMAP_H
