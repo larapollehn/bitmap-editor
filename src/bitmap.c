@@ -419,6 +419,39 @@ uint32_t Bitmap_initialize_header(Bitmap *bitmap, FILE * dest, uint32_t width, u
         return 1;
 }
 
+uint32_t
+
+Bitmap_draw_triangle(Bitmap *bitmap, FILE *dest, Point *A, Point *B, Point *C, uint32_t width, uint32_t height) {
+
+    uint32_t initializeHeaders = Bitmap_initialize_header(bitmap, dest, width, height);
+    check_exit(initializeHeaders == 0, "Failed to initialize the bitmap headers");
+
+    uint8_t circle[] = {97, 139, 255};
+    uint8_t background[] = {255, 255, 255};
+
+    for(int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
+            Point P;
+            P.x_posn = x;
+            P.y_posn = y;
+
+            uint32_t inTriangle = point_in_triangle(A, B, C, &P);
+
+            if(inTriangle == 1){
+                uint32_t writtenData = fwrite(circle, sizeof(circle), 1, dest);
+                check_exit(writtenData == 1, "Failed: writing data");
+            } else {
+                uint32_t writtenData = fwrite(background, sizeof(background), 1, dest);
+                check_exit(writtenData == 1, "Failed: writing data");
+            }
+        }
+    }
+    
+    return 0;
+    error_handling:
+        return 1;
+}
+
 
 
 
