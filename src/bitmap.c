@@ -446,11 +446,36 @@ Bitmap_draw_triangle(Bitmap *bitmap, FILE *dest, Point *A, Point *B, Point *C, u
             }
         }
     }
-    
+
     return 0;
     error_handling:
         return 1;
 }
+
+
+
+uint32_t Bitmap_layer_create(Bitmap *bitmap, FILE *dest, uint8_t *backgroundColor, uint32_t width, uint32_t height) {
+
+    uint32_t initializeHeaders = Bitmap_initialize_header(bitmap, dest, width, height);
+    check_exit(initializeHeaders == 0, "Failed to initialize the bitmap headers");
+
+    uint8_t bgr[] = {backgroundColor[0], backgroundColor[1], backgroundColor[2]};
+
+    for(int y = 0; y < (width *height); y++){
+        uint32_t writtenData = fwrite(bgr, sizeof(bgr), 1, dest);
+        check_exit(writtenData == 1, "Failed: writing data");
+    }
+
+    return 0;
+    error_handling:
+        return 1;
+}
+
+
+uint32_t Bitmap_layer_circle(Bitmap *bitmap, FILE *dest, Point *origin, uint32_t radius, uint32_t width, uint32_t height, uint8_t * color) {
+    return 0;
+}
+
 
 
 

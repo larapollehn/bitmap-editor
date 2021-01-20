@@ -755,6 +755,78 @@ void testCase30(){
     uint32_t drawn = Bitmap_draw_triangle(&bitmap, bmp, &A, &B, &C, 200, 200);
 }
 
+void testCase31(){
+    Bitmap bitmap;
+
+    char filepath[] = "triangle_3.bmp";
+    FILE * bmp = fopen(filepath, "wb");
+
+    Point A;
+    A.x_posn = -20;
+    A.y_posn = -20;
+
+    Point B;
+    B.x_posn = 30;
+    B.y_posn = 190;
+
+    Point C;
+    C.x_posn = 190;
+    C.y_posn = 70;
+
+    uint32_t drawn = Bitmap_draw_triangle(&bitmap, bmp, &A, &B, &C, 200, 200);
+}
+
+void testCase32(){
+    Bitmap bitmap;
+
+    char filepath[] = "create_layer.bmp";
+    FILE * bmp = fopen(filepath, "wb");
+
+    uint32_t width = 8;
+    uint32_t height = 8;
+
+    uint8_t bgr[] = {222,128,193};
+
+    uint32_t create = Bitmap_layer_create(&bitmap, bmp, bgr, width, height);
+
+}
+
+void testCase33(){
+
+    Bitmap bitmap;
+
+    char filepath[] = "create_layer.bmp";
+    FILE * bmp = fopen(filepath, "wb");
+
+    uint32_t width = 200;
+    uint32_t height = 200;
+
+    uint8_t bgr[] = {222,128,193};
+
+    uint32_t create = Bitmap_layer_create(&bitmap, bmp, bgr, width, height);
+
+    fclose(bmp);
+}
+
+void testCase34(){
+    Bitmap bitmap;
+
+    char filepath[] = "create_layer.bmp";
+    FILE * bmp = fopen(filepath, "wb");
+
+    uint8_t color[] = {255,0,0};
+
+    uint32_t width = 200;
+    uint32_t height = 200;
+
+    Point origin;
+    origin.x_posn = 100;
+    origin.y_posn = 100;
+
+    uint8_t draw = Bitmap_layer_circle(&bitmap, bmp, &origin, 80, width, height, color);
+}
+
+
 int main(){
     /*
     testCase1();
@@ -788,6 +860,9 @@ int main(){
 
     //testCase25();
     //testCase29();
-    testCase30();
+    //testCase30();
+    //testCase31();
+    //testCase32();
+    //testCase33();
     return 0;
 }

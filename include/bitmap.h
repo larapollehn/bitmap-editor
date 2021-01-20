@@ -154,4 +154,30 @@ uint32_t Bitmap_draw_circle(Bitmap * bitmap, FILE * dest, Point * origin, uint32
  */
 uint32_t Bitmap_initialize_header(Bitmap * bitmap, FILE * dest, uint32_t width, uint32_t height);
 
+
+/**
+ * Create a bitmap with 24 bit per px
+ * @param bitmap
+ * @param dest file that will contain the bitmap
+ * @param backgroundColor is color that the bitmap will have
+ * @param width of the bitmap
+ * @param height of the bitmap
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_layer_create(Bitmap * bitmap, FILE * dest, uint8_t * backgroundColor, uint32_t width, uint32_t height);
+
+/**
+ * Draw circle around point with given radius in bitmap picture
+ * Do only change pixel data of pixels that are in circle
+ * @param bitmap
+ * @param dest file that will contain the bitmap
+ * @param origin Point where the circle originates
+ * @param radius of the circle
+ * @param width of the bitmap
+ * @param height of the bitmap
+ * @param color is color that the circle will have
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_layer_circle(Bitmap * bitmap, FILE * dest, Point * origin, uint32_t radius, uint32_t width, uint32_t height, uint8_t * color);
+
 #endif //LIBRARY_BITMAP_H
