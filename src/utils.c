@@ -16,11 +16,9 @@ uint32_t distance_ptp(Point *first, Point *second) {
     return (uint32_t) distance;
 }
 
-
 uint8_t point_in_triangle(Point *A, Point *B, Point *C, Point *P) {
 
     // http://totologic.blogspot.com/2014/01/accurate-point-in-triangle-test.html
-
 
     // get the three orthogonal vectors based on triangle
     Point left_orthogonal_v1;
@@ -60,6 +58,4 @@ uint8_t point_in_triangle(Point *A, Point *B, Point *C, Point *P) {
     } else {
         return 0;
     }
-
-    return 0;
 }

@@ -13,8 +13,14 @@ typedef struct Color{
     uint8_t blue; // blue intensity - 1 byte
     uint8_t green; // green intensity - 1 byte
     uint8_t red; // red intensity - 1 byte
-    uint8_t alpha; // unused, 0 - 1 byte
+    uint8_t alpha; // reserved (alpha channel), 0 - 1 byte
 }  __attribute__((packed)) Color;
+
+typedef struct RGB{
+    uint8_t red; // red intensity - 1 byte
+    uint8_t green; // green intensity - 1 byte
+    uint8_t blue; // blue intensity - 1 byte
+} __attribute__((packed)) RGB;
 
 /* Naming-Schema https://de.wikipedia.org/wiki/Windows_Bitmap#Dateiformat_(Version_3) */
 typedef struct Bitmap {
@@ -41,6 +47,9 @@ typedef struct Bitmap {
     uint32_t colorTable_size;
 }__attribute__((packed)) Bitmap;
 
+//-#########################################################################
+// Bitmap & File handling
+//-#########################################################################
 
 /**
  * Initialize the bmp photo trough scanning the picture byte by byte
@@ -49,12 +58,7 @@ typedef struct Bitmap {
  * @return 0 if successful, 1 if failed
  */
 uint32_t Bitmap_scan(FILE * source, Bitmap * bitmap);
-/**
- * Empty the allocated mem-space used for the bitmap
- * @param bitmap whose content (data, colorTable) will be freed
- * @return 0 if successfull, 1 if failed
- */
-uint32_t Bitmap_destroy(Bitmap * bitmap);
+
 /**
  * Use the content of a Bitmap and produce a new bitmap picture,
  * this is essentially a copy of an original bmp picture
@@ -63,21 +67,23 @@ uint32_t Bitmap_destroy(Bitmap * bitmap);
  * @return 0 if successful, 1 if failed
  */
 uint32_t Bitmap_copyIntoFile(FILE * dest, Bitmap * bitmap);
+
 /**
  * Prints a bitmap in command Line interface/terminal
  * @param bitmap to be printed
- * @param filepath to the file containing the bitmap
- * @return 0 if successful, 1 if failed
  */
-uint32_t Bitmap_print(Bitmap * bitmap, char * filepath);
+void Bitmap_print(const Bitmap * bitmap);
 
 /**
- * Create a bitmap with 24 bit per px
- * @param bitmap
- * @param dest file that will contain the bitmap
- * @return 0 if successful, 1 if failed
+ * Empty the allocated mem-space used for the bitmap
+ * @param bitmap whose content (data, colorTable) will be freed
+ * @return 0 if successfull, 1 if failed
  */
-uint32_t Bitmap_create(Bitmap * bitmap, FILE * dest);
+uint32_t Bitmap_destroy(Bitmap * bitmap);
+
+//-#########################################################################
+// Modify & Change Bitmap images
+//-#########################################################################
 
 /**
  * Grayscaling in the most naive way
@@ -99,23 +105,36 @@ uint32_t Bitmap_naive_grayscaling_px(Bitmap * bitmap);
  */
 uint32_t Bitmap_naive_grayscaling_ct(Bitmap * bitmap);
 
-/**
- * Create a bitmap picture with an unfilled square around
- * Start point of painting is always O(0/0) in the upper left corner
- * @param bitmap
- * @param dest file that will contain the bitmap
- * @return 0 if successful, 1 if failed
- */
-uint32_t Bitmap_draw_square(Bitmap * bitmap, FILE * dest);
+//-#########################################################################
+// Creating Bitmap images
+//-#########################################################################
 
 /**
- * Create a bitmap with a filled triangle on it
- * Start point of painting is always O(0/0) in the upper left corner
- * @param bitmap
- * @param dest file that will contain the bitmap
+ * Init the bitmap headers
+ * for bitmaps without colorTable and 24 bpp
+ * image data will not be initialized
+ * @param bitmap whose headers will be initialized
+ * @param width of the bitmap
+ * @param height of the bitmap
  * @return 0 if successful, 1 if failed
  */
-uint32_t Bitmap_draw_triangle_naive(Bitmap * bitmap, FILE * dest);
+void Bitmap_initialize_header(Bitmap * bitmap, uint32_t width, uint32_t height);
+
+/**
+ * Create a bitmap with 24 bit per px
+ * @param bitmap
+ * @param dest file that will contain the bitmap
+ * @param backgroundColor is color that the bitmap will have
+ * @param width of the bitmap
+ * @param height of the bitmap
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_create(Bitmap * bitmap, FILE * dest, RGB * backgroundColor, uint32_t width, uint32_t height);
+
+
+//-#########################################################################
+// Draw in Bitmap images
+//-#########################################################################
 
 /**
  *
@@ -142,42 +161,5 @@ uint32_t Bitmap_draw_triangle(Bitmap * bitmap, FILE * dest, Point * A, Point * B
  */
 uint32_t Bitmap_draw_circle(Bitmap * bitmap, FILE * dest, Point * origin, uint32_t radius, uint32_t width, uint32_t height);
 
-/**
- * Init the bitmap headers
- * for bitmaps without colorTable and 24 bpp
- * data will not be initialized
- * @param bitmap whose headers will be initialized
- * @param dest file that will contain the bitmap
- * @param width of the bitmap
- * @param height of the bitmap
- * @return 0 if successful, 1 if failed
- */
-uint32_t Bitmap_initialize_header(Bitmap * bitmap, FILE * dest, uint32_t width, uint32_t height);
-
-
-/**
- * Create a bitmap with 24 bit per px
- * @param bitmap
- * @param dest file that will contain the bitmap
- * @param backgroundColor is color that the bitmap will have
- * @param width of the bitmap
- * @param height of the bitmap
- * @return 0 if successful, 1 if failed
- */
-uint32_t Bitmap_layer_create(Bitmap * bitmap, FILE * dest, uint8_t * backgroundColor, uint32_t width, uint32_t height);
-
-/**
- * Draw circle around point with given radius in bitmap picture
- * Do only change pixel data of pixels that are in circle
- * @param bitmap
- * @param dest file that will contain the bitmap
- * @param origin Point where the circle originates
- * @param radius of the circle
- * @param width of the bitmap
- * @param height of the bitmap
- * @param color is color that the circle will have
- * @return 0 if successful, 1 if failed
- */
-uint32_t Bitmap_layer_circle(Bitmap * bitmap, FILE * dest, Point * origin, uint32_t radius, uint32_t width, uint32_t height, uint8_t * color);
 
 #endif //LIBRARY_BITMAP_H

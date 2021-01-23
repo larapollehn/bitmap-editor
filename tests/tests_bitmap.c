@@ -6,6 +6,8 @@
 #include "utils.h"
 #include "bitmap.h"
 
+void hide(){
+/*
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \
   (byte & 0x80 ? '1' : '0'), \
@@ -16,30 +18,6 @@
   (byte & 0x04 ? '1' : '0'), \
   (byte & 0x02 ? '1' : '0'), \
   (byte & 0x01 ? '1' : '0')
-
-void byte_to_bits(uint8_t bits[], uint8_t byte){
-    uint8_t mask = 1; // Bit mask
-
-    // Extract the bits
-    for (int i = 0; i < 8; i++) {
-    // Mask each bit in the byte and store it
-        bits[i] = (byte & (mask << i)) != 0;
-    }
-}
-
-char *byte_to_binary(int x)
-{
-    static char b[9];
-    b[0] = '\0';
-
-    int z;
-    for (z = 128; z > 0; z >>= 1) {
-        strcat(b, ((x & z) == z) ? "1" : "0");
-    }
-
-    return b;
-}
-
 void testCase1(){
 
     char filepath[] = "all_gray.bmp";
@@ -99,6 +77,7 @@ void testCase1(){
     free(bitmap.colorTable);
     free(bitmap.data);
 }
+
 
 void testCase2(){
     char filepath[] = "all_gray.bmp";
@@ -358,10 +337,7 @@ void testCase9(){
     Bitmap_destroy(&bitmap);
 }
 
-/**
- * Alter the bmp all_gray.bmp (bitmap.data only)
- * and assign a different color from the colorTable
- */
+
 void testCase10(){
     char filepath[] = "all_gray.bmp";
 
@@ -625,30 +601,6 @@ void testCase22(){
     assert_equal(0, copied, "Failed: copy");
 }
 
-void testCase23(){
-    char filepath[] = "square.bmp";
-
-    Bitmap bitmap;
-
-    FILE * bmp = fopen(filepath, "wb");
-
-    Bitmap_draw_square(&bitmap, bmp);
-
-    fclose(bmp);
-}
-
-void testCase24(){
-    char filepath[] = "triangle.bmp";
-
-    Bitmap bitmap;
-
-    FILE * bmp = fopen(filepath, "wb");
-
-    Bitmap_draw_triangle_naive(&bitmap, bmp);
-
-    fclose(bmp);
-}
-
 void printAllPictureInfos(){
     char * filepaths[8] = { "bmp_24.bmp","sample_640_426.bmp","all_gray.bmp", "dots.bmp", "lena.bmp", "greenland_grid_velo.bmp", "blackbuck.bmp", "trial.bmp"};
 
@@ -668,8 +620,6 @@ void printAllPictureInfos(){
         fclose(bmp);
     }
 }
-
-
 
 void testCase25(){
 
@@ -787,82 +737,37 @@ void testCase32(){
 
     uint8_t bgr[] = {222,128,193};
 
-    uint32_t create = Bitmap_layer_create(&bitmap, bmp, bgr, width, height);
+    uint32_t create = Bitmap_create(&bitmap, bmp, bgr, width, height);
 
 }
 
-void testCase33(){
+ */
+}
 
+/**
+ * Image: 8bpp with colorTable
+ * Scan image and test the created bitmap on accuracy
+ */
+void testCase1(){
     Bitmap bitmap;
 
-    char filepath[] = "create_layer.bmp";
-    FILE * bmp = fopen(filepath, "wb");
+    FILE * image = fopen("./samples/all_gray.bmp", "rb");
 
-    uint32_t width = 200;
-    uint32_t height = 200;
+    uint32_t scanned = Bitmap_scan(image, &bitmap);
+    assert_equal(0, scanned, "Failed: Bitmap_scan - testCase1");
 
-    uint8_t bgr[] = {222,128,193};
+    assert_equal(40, bitmap.biSize, "Wrong: biSize");
+    assert_equal(8, bitmap.biWidth, "Wrong: biWidth");
+    assert_equal(2, bitmap.biHeight, "Wrong: biHeight");
+    assert_equal(8, bitmap.biBitCount, "Wrong: biBitCount");
+    assert_equal(0, bitmap.biCompression, "Wrong: biCompression");
+    assert_equal()
 
-    uint32_t create = Bitmap_layer_create(&bitmap, bmp, bgr, width, height);
 
-    fclose(bmp);
+
 }
-
-void testCase34(){
-    Bitmap bitmap;
-
-    char filepath[] = "create_layer.bmp";
-    FILE * bmp = fopen(filepath, "wb");
-
-    uint8_t color[] = {255,0,0};
-
-    uint32_t width = 200;
-    uint32_t height = 200;
-
-    Point origin;
-    origin.x_posn = 100;
-    origin.y_posn = 100;
-
-    uint8_t draw = Bitmap_layer_circle(&bitmap, bmp, &origin, 80, width, height, color);
-}
-
 
 int main(){
-    /*
     testCase1();
-    testCase2();
-    testCase3();
-    testCase4();
-    testCase6();
-    testCase7();
-    testCase8();
-    testCase9();
-    testCase10();
-    testCase11();
-    testCase12();
-     */
-    //testCase13();
-    //testCase14();
-    //testCase15();
-    //testCase16();
-    //testCase17();
-    //testCase18();
-    //testCase19();
-    //testCase20();
-    //testCase21();
-    //testCase22();
-    //testCase23();
-    //testCase24();
-    //testCase26();
-    //testCase27();
-    //testCase28();
-    //printAllPictureInfos();
-
-    //testCase25();
-    //testCase29();
-    //testCase30();
-    //testCase31();
-    //testCase32();
-    //testCase33();
     return 0;
 }

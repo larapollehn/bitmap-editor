@@ -11,6 +11,10 @@
 #include <stdio.h>
 #include <stdint.h>
 
+//-#########################################################################
+// Macros
+//-#########################################################################
+
 #define MODE 0 // 0 = development, 1 = production
 
 #define clean_errno() (errno == 0 ? "None" : strerror(errno))
@@ -41,6 +45,10 @@
 
 /* https://stackoverflow.com/questions/3553296/sizeof-single-struct-member-in-c */
 #define member_size(type, member) sizeof(((type *)0)->member)
+
+//-#########################################################################
+// Util structs and functions
+//-#########################################################################
 
 typedef struct Point{
     uint32_t x_posn;
