@@ -56,6 +56,7 @@ typedef struct Bitmap {
  * @param filepath contains the path to the bmp picture
  * @param the destination Bitmap to contain the read data
  * @return 0 if successful, 1 if failed
+ * @afterUse Bitmap_destroy(Bitmap * bitmap)
  */
 uint32_t Bitmap_scan(FILE * source, Bitmap * bitmap);
 

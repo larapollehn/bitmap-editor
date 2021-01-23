@@ -756,15 +756,42 @@ void testCase1(){
     uint32_t scanned = Bitmap_scan(image, &bitmap);
     assert_equal(0, scanned, "Failed: Bitmap_scan - testCase1");
 
+    // check the image specific infos
+    assert_equal(1094, bitmap.bfSize, "Wrong: bfSize");
+    assert_equal(1078, bitmap.bfOffBits, "Wrong: bfOffBits");
     assert_equal(40, bitmap.biSize, "Wrong: biSize");
     assert_equal(8, bitmap.biWidth, "Wrong: biWidth");
     assert_equal(2, bitmap.biHeight, "Wrong: biHeight");
     assert_equal(8, bitmap.biBitCount, "Wrong: biBitCount");
+    assert_equal(16, bitmap.biSizeImage, "Wrong: biSizeImage");
+    assert_equal(16, bitmap.data_size, "Wrong: data_size");
+    assert_equal(256, bitmap.biClrUsed, "Wrong: biClrUsed");
+    assert_equal(256, bitmap.biClrImportant, "Wrong: biClrImportant");
+    assert_equal(256, bitmap.colorTable_size, "Wrong: colorTable_size");
+
+    // check the standardized infos
     assert_equal(0, bitmap.biCompression, "Wrong: biCompression");
-    assert_equal()
+    assert_equal(1, bitmap.biPlanes, "Wrong: biPlanes");
+    assert_equal(0, bitmap.biXPelsPerMeter, "Wrong: biXPelsPerMeter");
+    assert_equal(0, bitmap.biYPelsPerMeter, "Wrong: biYPelsPerMeter");
+    assert_equal(0, bitmap.bfReserved, "Wrong: bfReserved");
 
+    // check the colorTable entries
+    // for this specific bitmap image the colorTables entries consist of the index/position for all three color channels
+    for(int i = 0; i < bitmap.colorTable_size; i++){
+        assert_equal(i, (bitmap.colorTable +i)->red, "Wrong: colorTable at index %d color red", i);
+        assert_equal(i, (bitmap.colorTable +i)->green, "Wrong: colorTable at index %d color green", i);
+        assert_equal(i, (bitmap.colorTable +i)->blue, "Wrong: colorTable at index %d color blue", i);
+    }
 
+    // check the pixel data +
+    // for this specific image all of them point to colorTable entry 135
+    for(int i = 0; i < bitmap.data_size; i++){
+        assert_equal(135, *(bitmap.data +i), "Wrong: data at index %d", i);
+    }
 
+    fclose(image);
+    Bitmap_destroy(&bitmap);
 }
 
 int main(){
