@@ -17,9 +17,9 @@ typedef struct Color{
 }  __attribute__((packed)) Color;
 
 typedef struct RGB{
-    uint8_t red; // red intensity - 1 byte
-    uint8_t green; // green intensity - 1 byte
     uint8_t blue; // blue intensity - 1 byte
+    uint8_t green; // green intensity - 1 byte
+    uint8_t red; // red intensity - 1 byte
 } __attribute__((packed)) RGB;
 
 /* Naming-Schema https://de.wikipedia.org/wiki/Windows_Bitmap#Dateiformat_(Version_3) */
@@ -122,15 +122,15 @@ uint32_t Bitmap_naive_grayscaling_ct(Bitmap * bitmap);
 void Bitmap_initialize_header(Bitmap * bitmap, uint32_t width, uint32_t height);
 
 /**
- * Create a bitmap with 24 bit per px
+ * Create a bitmap with 24 bpp and no colorTable
  * @param bitmap
- * @param dest file that will contain the bitmap
  * @param backgroundColor is color that the bitmap will have
  * @param width of the bitmap
  * @param height of the bitmap
  * @return 0 if successful, 1 if failed
+ * @afterUse Bitmap_destroy(Bitmap * bitmap)
  */
-uint32_t Bitmap_create(Bitmap * bitmap, FILE * dest, RGB * backgroundColor, uint32_t width, uint32_t height);
+uint32_t Bitmap_create(Bitmap * bitmap, const RGB * backgroundColor, uint32_t width, uint32_t height);
 
 
 //-#########################################################################

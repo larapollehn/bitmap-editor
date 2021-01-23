@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <math.h>
+#include <string.h>
 #include "utils.h"
 #include "bitmap.h"
 
@@ -217,23 +218,46 @@ void Bitmap_initialize_header(Bitmap *bitmap, uint32_t width, uint32_t height) {
     bitmap->data_size = bitmap->biSizeImage;
 }
 
-uint32_t Bitmap_create(Bitmap *bitmap, FILE *dest, RGB *backgroundColor, uint32_t width, uint32_t height) {
+uint32_t Bitmap_create(Bitmap *bitmap, const RGB *backgroundColor, uint32_t width, uint32_t height) {
 
     // initialize the Bitmap Headers containing infos about the image itself
     Bitmap_initialize_header(bitmap, width, height);
 
-    uint32_t dataSize = width * height;
+    // determine size of data
+    // a data unit is always 1 byte
+    uint32_t size_data;
+    if(bitmap->biCompression == 0 && (bitmap->biWidth % 4 == 0)){
+        // calculate the size of the data by the height, width and bit per pixel count
+        size_data = ((bitmap->biWidth * bitmap->biHeight * bitmap->biBitCount)/ 8);
+    } else if(bitmap->biSizeImage != 0) {
+        // sometimes the size of the image is saved in the bitmap header
+        size_data = bitmap->biSizeImage;
+    } else {
+        // calculate the number of pixels of the image
+        // depending on the bits per pixel calculate the size of the data
+        if(bitmap->biBitCount == 8){
+            size_data = (bitmap->biWidth * bitmap->biHeight);
+        } else if(bitmap->biBitCount == 16){
+            size_data = (bitmap->biWidth * bitmap->biHeight) * 2;
+        } else if(bitmap->biBitCount == 24){
+            size_data = (bitmap->biWidth * bitmap->biHeight) * 3;
+        } else if(bitmap->biBitCount == 32){
+            size_data = (bitmap->biWidth * bitmap->biHeight) * 4;
+        }
+    }
+    check_exit(size_data > 0, "size_data should not be zero");
 
-    //RGB * pixel = malloc(sizeof (RGB) * )
+    // allocate the bitmap data array
+    bitmap->data = malloc(sizeof (uint8_t) *  size_data);
 
-    for(int y = 0; y < (width *height); y++){
-        //uint32_t writtenData = fwrite(bgr, sizeof(bgr), 1, dest);
-        //check_exit(writtenData == 1, "Failed: writing data");
+    // copy the backgroundColor into the pixel array
+    for(int i = 0; i < (size_data/ 3); i++){
+        memcpy((bitmap->data + i * 3), backgroundColor, 3);
     }
 
     return 0;
     error_handling:
-    return 1;
+        return 1;
 }
 
 //-#########################################################################
@@ -241,7 +265,6 @@ uint32_t Bitmap_create(Bitmap *bitmap, FILE *dest, RGB *backgroundColor, uint32_
 //-#########################################################################
 
 uint32_t Bitmap_draw_triangle(Bitmap *bitmap, FILE *dest, Point *A, Point *B, Point *C, uint32_t width, uint32_t height) {
-
     Bitmap_initialize_header(bitmap, width, height);
 
     uint8_t circle[] = {97, 139, 255};
