@@ -745,6 +745,7 @@ void testCase32(){
 }
 
 /*
+ * Test Bitmap_scan
  * Image: 8bpp with colorTable
  * Scan image and test the created bitmap on accuracy
  */
@@ -839,7 +840,8 @@ void testCase2(){
 }
 
 /*
- * create Bitmap and copy into file
+ * Test Bitmap_create
+ * create Bitmap and copy into file for visual test
  */
 void testCase3(){
     Bitmap bitmap;
@@ -860,6 +862,11 @@ void testCase3(){
     Bitmap_destroy(&bitmap);
 }
 
+/*
+ * Test Bitmap_scan and Bitmap_copyIntoFile
+ * Scan bitmap, copy into new file and scan the copy.
+ * Compare both versions of the same bitmap image
+ */
 void testCase4(){
     Bitmap bitmap;
 
@@ -905,12 +912,77 @@ void testCase4(){
     Bitmap_destroy(&bitmap);
 }
 
+/*
+ * Test Bitmap_naive_grayscaling_px
+ * grayscale a bitmap image with 24 bpp and no colorTable
+ * check bitmap data on accuracy
+ */
+void testCase5(){
+
+    char filepath[] = "./samples/pink.bmp";
+
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    uint32_t expected_gray = (*(bitmap.data ) + *(bitmap.data + 1) + *(bitmap.data + 2)) / 3;
+
+    Bitmap_naive_grayscaling_px(&bitmap);
+
+    for(int i = 0; i < bitmap.data_size; i++){
+        // check with the manually and programmatically computed gray-tone
+        assert_equal(181, *(uint8_t *)(bitmap.data + i), "Grayscale did not work");
+        assert_equal(expected_gray, *(uint8_t *)(bitmap.data + i), "Failed: gray_tone");
+    }
+
+    Bitmap_destroy(&bitmap);
+    fclose(bmp);
+}
+
+/*
+ * Test Bitmap_naive_grayscaling_ct
+ * grayscale a bitmap image with 8 bpp and a colorTable
+ * check bitmap data on accuracy
+ * Expects data to not change, gray stays gray
+ */
+void testCase6(){
+
+    char filepath[] = "./samples/all_gray.bmp";
+
+    Bitmap bitmap;
+
+    FILE * bmp = fopen(filepath, "rb");
+
+    uint32_t scanned = Bitmap_scan(bmp, &bitmap);
+    assert_equal(0, scanned, "Failed: scan");
+
+    uint32_t colorTable_index = *bitmap.data;
+
+    Color * color = bitmap.colorTable + colorTable_index;
+
+    uint32_t expected_gray = (color->blue + color->green + color->red) / 3;
+
+    Bitmap_naive_grayscaling_ct(&bitmap);
+
+    for(int i = 0; i < bitmap.data_size; i++){
+        // check with the manually and programmatically computed gray-tone
+        assert_equal(135, *(uint8_t *)(bitmap.data + i), "Grayscale did not work");
+        assert_equal(expected_gray, *(uint8_t *)(bitmap.data + i), "Failed to compute gray");
+    }
+
+    Bitmap_destroy(&bitmap);
+    fclose(bmp);
+}
+
 void printAllPictureInfos(){
 
     Bitmap bitmap;
 
     // open bmp picture and scan into Bitmap
-    FILE * bmp = fopen("./samples/pink.bmp", "rb");
+    FILE * bmp = fopen("./samples/all_gray.bmp", "rb");
 
     uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
@@ -927,6 +999,8 @@ int main(){
     testCase2();
     testCase3();
     testCase4();
+    testCase5();
+    testCase6();
     //printAllPictureInfos();
     return 0;
 }
