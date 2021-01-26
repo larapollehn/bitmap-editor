@@ -50,9 +50,11 @@
 // Util structs and functions
 //-#########################################################################
 
+typedef float fp_t;
+
 typedef struct Point{
-    int32_t x_posn;
-    int32_t y_posn;
+    fp_t x_posn;
+    fp_t y_posn;
 } Point;
 
 /**
@@ -73,6 +75,6 @@ uint32_t distance_ptp(Point * first, Point * second);
  * @param P is a Point
  * @return 1 if true, 0 if false
  */
-uint8_t point_in_triangle(Point * A, Point * B, Point * C, Point * P);
+uint8_t point_in_triangle(const Point * A, const Point * B, const Point * C, const  Point * P);
 
 #endif //BITMAP_EDITOR_UTILS_H

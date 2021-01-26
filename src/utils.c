@@ -16,28 +16,40 @@ uint32_t distance_ptp(Point *first, Point *second) {
     return (uint32_t) distance;
 }
 
-uint8_t point_in_triangle(Point *A, Point *B, Point *C, Point *P) {
+uint8_t point_in_triangle(const Point *A, const Point *B,const Point *C,const Point *P) {
 
     // https://math.stackexchange.com/questions/51326/determining-if-an-arbitrary-point-lies-inside-a-triangle-defined-by-three-points
 
+    // check if P is one of the triangles corners
+    if(A->x_posn == P->x_posn && A->y_posn == P->y_posn){
+        return 1;
+    }
+    if(B->x_posn == P->x_posn && B->y_posn == P->y_posn){
+        return 1;
+    }
+    if(C->x_posn == P->x_posn && C->y_posn == P->y_posn){
+        return 1;
+    }
+
     // Move Origin at one Vertex
     // Go with A
-    B->x_posn = (B->x_posn - A->x_posn);
-    B->y_posn = (B->y_posn - A->y_posn);
+    fp_t b_x = (B->x_posn - A->x_posn);
+    fp_t b_y = (B->y_posn - A->y_posn);
 
-    C->x_posn = (C->x_posn - A->x_posn);
-    C->y_posn = (C->y_posn - A->y_posn);
+    fp_t c_x = (C->x_posn - A->x_posn);
+    fp_t c_y = (C->y_posn - A->y_posn);
 
-    P->y_posn = (P->x_posn - A->x_posn);
-    P->y_posn = (P->y_posn - A->y_posn);
+    fp_t p_x = (P->x_posn - A->x_posn);
+    fp_t p_y = (P->y_posn - A->y_posn);
 
     // calculate the scalar d
-    int32_t d = (B->x_posn * C->y_posn) - (C->x_posn * B->y_posn);
+    fp_t d = (b_x * c_y) - (c_x * b_y);
 
     // calculate the three Barycentric weights
-    int32_t weight_A = (((P->x_posn * (B->y_posn - C->y_posn)) + (P->y_posn * (C->x_posn - B->x_posn)) + (B->x_posn * C->y_posn) - (C->x_posn * B->y_posn)) / d );
-    int32_t weight_B = (((P->x_posn * C->y_posn) - (P->y_posn * C->x_posn)) / d );
-    int32_t weight_C = (((P->y_posn * B->x_posn) - (P->x_posn * B->y_posn)) / d );
+    fp_t weight_A = (((p_x * (b_y - c_y)) + (p_y * (c_x - b_x)) + (b_x * c_y) - (c_x * b_y)) / d );
+    fp_t weight_B = (((p_x * c_y) - (p_y * c_x)) / d );
+    fp_t weight_C = (((p_y * b_x) - (p_x * b_y)) / d );
+
 
     // If all three weights are between 0 and 1, Point P is within/on the triangle ABC
     if((weight_A >= 0 && weight_A <= 1) && (weight_B >= 0 && weight_B <= 1) && (weight_C >= 0 && weight_C <= 1)){

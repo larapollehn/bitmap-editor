@@ -264,33 +264,24 @@ uint32_t Bitmap_create(Bitmap *bitmap, const RGB *backgroundColor, uint32_t widt
 // Draw in Bitmap images
 //-#########################################################################
 
-uint32_t Bitmap_draw_triangle(Bitmap *bitmap, FILE *dest, Point *A, Point *B, Point *C, uint32_t width, uint32_t height) {
-    Bitmap_initialize_header(bitmap, width, height);
-
-    uint8_t circle[] = {97, 139, 255};
-    uint8_t background[] = {255, 255, 255};
-
-    for(int y = 0; y < height; y++){
-        for(int x = 0; x < width; x++){
+uint32_t Bitmap_draw_triangle(Bitmap *bitmap, const Point *A, const Point *B, const Point *C, const RGB * color) {
+    for(int y = 0; y < bitmap->biHeight; y++){
+        for(int x = 0; x < bitmap->biWidth; x++){
             Point P;
-            P.x_posn = x;
-            P.y_posn = y;
+            P.x_posn = (fp_t)x;
+            P.y_posn = (fp_t)y;
 
             uint32_t inTriangle = point_in_triangle(A, B, C, &P);
 
             if(inTriangle == 1){
-                uint32_t writtenData = fwrite(circle, sizeof(circle), 1, dest);
-                check_exit(writtenData == 1, "Failed: writing data");
-            } else {
-                uint32_t writtenData = fwrite(background, sizeof(background), 1, dest);
-                check_exit(writtenData == 1, "Failed: writing data");
+                uint32_t index = (bitmap->biHeight * y) + x;
+                uint32_t startIndex = (3 * index);
+                memcpy((bitmap->data + startIndex), color, 3);
             }
         }
     }
 
     return 0;
-    error_handling:
-        return 1;
 }
 
 uint32_t Bitmap_draw_circle(Bitmap *bitmap, FILE *dest, Point * origin, uint32_t radius, uint32_t width, uint32_t height){

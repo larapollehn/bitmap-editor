@@ -239,6 +239,52 @@ void testCase6(){
     fclose(bmp);
 }
 
+/*
+ * Test Bitmap_create and Bitmap_draw_triangle
+ * create a unicolored bitmap image and draw a triangle in it
+ */
+void testCase7(){
+
+    // create Bitmap
+    Bitmap bitmap;
+
+    RGB orange;
+    orange.red = 255;
+    orange.green = 165;
+    orange.blue = 0;
+
+    uint32_t created = Bitmap_create(&bitmap, &orange, 400, 400);
+    assert_equal(0, created, "Failed: Bitmap_create - testCase7");
+
+    // draw triangle in the newly created Bitmap
+    RGB mint_green;
+    mint_green.red = 211;
+    mint_green.green = 255;
+    mint_green.blue = 206;
+
+    Point A;
+    A.x_posn = 25;
+    A.y_posn = 344;
+
+    Point B;
+    B.x_posn = 390;
+    B.y_posn = 312;
+
+    Point C;
+    C.x_posn = 200;
+    C.y_posn = 7;
+
+    uint32_t drawn = Bitmap_draw_triangle(&bitmap, &A, &B, &C, &mint_green);
+    assert_equal(0, drawn, "Failed: Bitmap_draw_triangle() - testCase 7");
+
+    //copy the bitmap into a file
+
+    FILE * dest = fopen("testCase7.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
+    assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase7");
+}
+
 void printAllPictureInfos(){
 
     Bitmap bitmap;
@@ -263,6 +309,7 @@ int main(){
     testCase4();
     testCase5();
     testCase6();
+    testCase7();
     //printAllPictureInfos();
     return 0;
 }

@@ -5,18 +5,6 @@
 #include <stddef.h>
 #include "utils.h"
 
-void testCase1(){
-    Point first;
-    first.x_posn = 2;
-    first.y_posn = 3;
-
-    Point second;
-    second.x_posn = 4;
-    second.y_posn = 1;
-
-    printf("Point 1:\n  x: %d\n  y: %d\n", first.x_posn, first.y_posn);
-    printf("Point 2:\n  x: %d\n  y: %d\n", second.x_posn, second.y_posn);
-}
 void testCase2(){
     Point first;
     first.x_posn = 2;
@@ -269,7 +257,6 @@ void testCase14(){
 }
 
 int main(){
-    //testCase1();
     testCase2();
     testCase3();
     testCase4();
@@ -279,5 +266,9 @@ int main(){
     testCase8();
     testCase9();
     testCase10();
+    testCase11();
+    testCase12();
+    testCase13();
+    testCase14();
     return 0;
 }
