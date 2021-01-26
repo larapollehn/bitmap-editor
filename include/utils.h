@@ -51,8 +51,8 @@
 //-#########################################################################
 
 typedef struct Point{
-    uint32_t x_posn;
-    uint32_t y_posn;
+    int32_t x_posn;
+    int32_t y_posn;
 } Point;
 
 /**
@@ -66,8 +66,7 @@ uint32_t distance_ptp(Point * first, Point * second);
 
 /**
  * Check if a point is within a triangle
- * uses dot product
- * A, B, C are placed counterclockwise in the stated order
+ * uses Barycentric Weight method
  * @param A is a Point of the triangle
  * @param B is a Point of the triangle
  * @param C is a Point of the triangle

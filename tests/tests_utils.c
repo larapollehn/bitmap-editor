@@ -66,13 +66,9 @@ void testCase5(){
     assert_equal(29, distance, "Failed to calculate the distance of two points")
 }
 
-
+/* Cases were the Point DOES lie in the triangle ABC */
 void testCase6(){
     // Triangle Points
-    Point C;
-    C.x_posn = 4;
-    C.y_posn = 0;
-
     Point A;
     A.x_posn = 1;
     A.y_posn = 5;
@@ -80,21 +76,21 @@ void testCase6(){
     Point B;
     B.x_posn = 7;
     B.y_posn = 5;
+
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
 
     // Point in question
     Point P;
     P.x_posn = 4;
     P.y_posn = 3;
 
-    uint8_t inTriangle = point_in_triangle(&C, &A, &B, &P);
+    uint8_t inTriangle = point_in_triangle(&A, &B, &C, &P);
     assert_equal(1, inTriangle, "failed: point_in_triangle");
 }
 void testCase7(){
     // Triangle Points
-    Point C;
-    C.x_posn = 4;
-    C.y_posn = 0;
-
     Point A;
     A.x_posn = 1;
     A.y_posn = 5;
@@ -103,42 +99,20 @@ void testCase7(){
     B.x_posn = 7;
     B.y_posn = 5;
 
-    // Point in question
-    Point P;
-    P.x_posn = 45;
-    P.y_posn = 33;
-
-    uint8_t inTriangle = point_in_triangle(&C, &A, &B, &P);
-    assert_equal(0, inTriangle, "failed: point_in_triangle");
-}
-void testCase8(){
-    // Triangle Points
     Point C;
     C.x_posn = 4;
     C.y_posn = 0;
-
-    Point A;
-    A.x_posn = 1;
-    A.y_posn = 5;
-
-    Point B;
-    B.x_posn = 7;
-    B.y_posn = 5;
 
     // Point in question
     Point P;
     P.x_posn = 1;
     P.y_posn = 5;
 
-    uint8_t inTriangle = point_in_triangle(&C, &A, &B, &P);
+    uint8_t inTriangle = point_in_triangle(&A, &B, &C, &P);
     assert_equal(1, inTriangle, "failed: point_in_triangle");
 }
-void testCase9(){
+void testCase8(){
     // Triangle Points
-    Point C;
-    C.x_posn = 4;
-    C.y_posn = 0;
-
     Point A;
     A.x_posn = 1;
     A.y_posn = 5;
@@ -146,21 +120,21 @@ void testCase9(){
     Point B;
     B.x_posn = 7;
     B.y_posn = 5;
+
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
 
     // Point in question
     Point P;
     P.x_posn = 4;
     P.y_posn = 0;
 
-    uint8_t inTriangle = point_in_triangle(&C, &A, &B, &P);
+    uint8_t inTriangle = point_in_triangle(&A, &B, &C, &P);
     assert_equal(1, inTriangle, "failed: point_in_triangle");
 }
-void testCase10(){
+void testCase9(){
     // Triangle Points
-    Point C;
-    C.x_posn = 4;
-    C.y_posn = 0;
-
     Point A;
     A.x_posn = 1;
     A.y_posn = 5;
@@ -169,13 +143,129 @@ void testCase10(){
     B.x_posn = 7;
     B.y_posn = 5;
 
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
+
     // Point in question
     Point P;
     P.x_posn = 7;
     P.y_posn = 5;
 
-    uint8_t inTriangle = point_in_triangle(&C, &A, &B, &P);
+    uint8_t inTriangle = point_in_triangle(&A, &B, &C, &P);
     assert_equal(1, inTriangle, "failed: point_in_triangle");
+}
+
+/* Cases where the Point does NOT lie in the triangle ABC */
+void testCase10(){
+    // Triangle Points
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 5;
+
+    Point B;
+    B.x_posn = 7;
+    B.y_posn = 5;
+
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
+
+    // Point in question
+    Point P;
+    P.x_posn = 45;
+    P.y_posn = 33;
+
+    uint8_t inTriangle = point_in_triangle(&A, &B, &C, &P);
+    assert_equal(0, inTriangle, "failed: point_in_triangle");
+}
+void testCase11(){
+    // Triangle Points
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 5;
+
+    Point B;
+    B.x_posn = 7;
+    B.y_posn = 5;
+
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
+
+    // Point in question
+    Point P;
+    P.x_posn = -2;
+    P.y_posn = 3;
+
+    uint8_t inTriangle = point_in_triangle(&A, &B, &C, &P);
+    assert_equal(0, inTriangle, "failed: point_in_triangle");
+}
+void testCase12(){
+    // Triangle Points
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 5;
+
+    Point B;
+    B.x_posn = 7;
+    B.y_posn = 5;
+
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
+
+    // Point in question
+    Point P;
+    P.x_posn = 100;
+    P.y_posn = 25;
+
+    uint8_t inTriangle = point_in_triangle(&A, &B, &C, &P);
+    assert_equal(0, inTriangle, "failed: point_in_triangle");
+}
+void testCase13(){
+    // Triangle Points
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 5;
+
+    Point B;
+    B.x_posn = 7;
+    B.y_posn = 5;
+
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
+
+    // Point in question
+    Point P;
+    P.x_posn = 3;
+    P.y_posn = 0;
+
+    uint8_t inTriangle = point_in_triangle(&A, &B, &C, &P);
+    assert_equal(0, inTriangle, "failed: point_in_triangle");
+}
+void testCase14(){
+    // Triangle Points
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 5;
+
+    Point B;
+    B.x_posn = 7;
+    B.y_posn = 5;
+
+    Point C;
+    C.x_posn = 4;
+    C.y_posn = 0;
+
+    // Point in question
+    Point P;
+    P.x_posn = 8;
+    P.y_posn = 5;
+
+    uint8_t inTriangle = point_in_triangle(&A, &B, &C, &P);
+    assert_equal(0, inTriangle, "failed: point_in_triangle");
 }
 
 int main(){
