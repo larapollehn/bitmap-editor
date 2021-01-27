@@ -285,6 +285,109 @@ void testCase7(){
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase7");
 }
 
+/*
+ * Test Bitmap_create and Bitmap_draw_triangle and Bitmap_draw_circle
+ * create a unicolored bitmap image and draw a triangle and circle in it
+ * than copy the bitmap into the file
+ */
+void testCase8(){
+
+    // create Bitmap
+    Bitmap bitmap;
+
+    RGB rose;
+    rose.red = 248;
+    rose.green = 203;
+    rose.blue = 219;
+
+    uint32_t created = Bitmap_create(&bitmap, &rose, 400, 400);
+    assert_equal(0, created, "Failed: Bitmap_create - testCase8");
+
+    // draw circle in the newly created Bitmap
+    RGB mint_green;
+    mint_green.red = 25;
+    mint_green.green = 255;
+    mint_green.blue = 175;
+
+    Point origin;
+    origin.x_posn = 234;
+    origin.y_posn = 287;
+
+    uint32_t radius = 156;
+
+    uint32_t drawn = Bitmap_draw_circle(&bitmap, &origin, radius, &mint_green);
+    assert_equal(0, drawn, "Failed: Bitmap_draw_circle() - testCase8");
+
+    // draw triangle in the newly created Bitmap
+    RGB blue;
+    blue.red = 136;
+    blue.green = 172;
+    blue.blue = 239;
+
+    Point A;
+    A.x_posn = 25;
+    A.y_posn = 344;
+
+    Point B;
+    B.x_posn = 390;
+    B.y_posn = 312;
+
+    Point C;
+    C.x_posn = 200;
+    C.y_posn = 7;
+
+    uint32_t drawn2 = Bitmap_draw_triangle(&bitmap, &A, &B, &C, &blue);
+    assert_equal(0, drawn2, "Failed: Bitmap_draw_triangle() - testCase8");
+
+    //copy the bitmap into a file
+
+    FILE * dest = fopen("testCase8.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
+    assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase8");
+}
+
+/*
+ * Test Bitmap_create and Bitmap_draw_circle
+ * create a unicolored bitmap image and draw a circle in it
+ * than copy the bitmap into a File
+ */
+void testCase9(){
+
+    // create Bitmap
+    Bitmap bitmap;
+
+    RGB orange;
+    orange.red = 255;
+    orange.green = 165;
+    orange.blue = 0;
+
+    uint32_t created = Bitmap_create(&bitmap, &orange, 400, 400);
+    assert_equal(0, created, "Failed: Bitmap_create - testCase9");
+
+    // draw circle in the newly created Bitmap
+    RGB mint_green;
+    mint_green.red = 211;
+    mint_green.green = 255;
+    mint_green.blue = 206;
+
+    Point origin;
+    origin.x_posn = 234;
+    origin.y_posn = 287;
+
+    uint32_t radius = 156;
+
+    uint32_t drawn = Bitmap_draw_circle(&bitmap, &origin, radius, &mint_green);
+    assert_equal(0, drawn, "Failed: Bitmap_draw_triangle() - testCase9");
+
+    //copy the bitmap into a file
+
+    FILE * dest = fopen("testCase9.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
+    assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase9");
+}
+
 void printAllPictureInfos(){
 
     Bitmap bitmap;
@@ -310,6 +413,8 @@ int main(){
     testCase5();
     testCase6();
     testCase7();
+    testCase8();
+    testCase9();
     //printAllPictureInfos();
     return 0;
 }

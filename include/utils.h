@@ -64,7 +64,7 @@ typedef struct Point{
  * @param second point
  * @return distance, rounded to the nearest integer
  */
-uint32_t distance_ptp(Point * first, Point * second);
+uint32_t distance_ptp(const Point * first, const Point * second);
 
 /**
  * Check if a point is within a triangle

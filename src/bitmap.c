@@ -284,33 +284,24 @@ uint32_t Bitmap_draw_triangle(Bitmap *bitmap, const Point *A, const Point *B, co
     return 0;
 }
 
-uint32_t Bitmap_draw_circle(Bitmap *bitmap, FILE *dest, Point * origin, uint32_t radius, uint32_t width, uint32_t height){
+uint32_t Bitmap_draw_circle(Bitmap *bitmap, const Point * origin, uint32_t radius, const RGB * color){
 
-    Bitmap_initialize_header(bitmap, width, height);
-
-    uint8_t circle[] = {97, 139, 255};
-    uint8_t background[] = {255, 255, 255};
-
-    for(int y = 0; y < height; y++){
-        for(int x = 0; x < width; x++){
+    for(int y = 0; y < bitmap->biHeight; y++){
+        for(int x = 0; x < bitmap->biWidth; x++){
             Point P;
             P.x_posn = x;
             P.y_posn = y;
 
             uint32_t distance = distance_ptp(&P, origin);
             if(distance <= radius){
-                uint32_t writtenData = fwrite(circle, sizeof(circle), 1, dest);
-                check_exit(writtenData == 1, "Failed: writing data");
-            } else {
-                uint32_t writtenData = fwrite(background, sizeof(background), 1, dest);
-                check_exit(writtenData == 1, "Failed: writing data");
+                uint32_t index = (bitmap->biHeight * y) + x;
+                uint32_t startIndex = (3 * index);
+                memcpy((bitmap->data + startIndex), color, 3);
             }
         }
     }
 
     return 0;
-    error_handling:
-    return 1;
 }
 
 

@@ -5,7 +5,7 @@
 #include "utils.h"
 #include <math.h>
 
-uint32_t distance_ptp(Point *first, Point *second) {
+uint32_t distance_ptp(const Point *first, const Point *second) {
     double x_difference = pow(((double) second->x_posn - (double) first->x_posn), 2);
     double y_difference = pow(((double) second->y_posn - (double) first->y_posn), 2);
 
