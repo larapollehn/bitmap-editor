@@ -304,6 +304,27 @@ uint32_t Bitmap_draw_circle(Bitmap *bitmap, const Point * origin, uint32_t radiu
     return 0;
 }
 
+uint32_t Bitmap_draw_rect(Bitmap *bitmap, const Point * A, const Point * B, const Point * C, const Point * D, RGB * color){
+
+    for(int y = 0; y < bitmap->biHeight; y++){
+        for(int x = 0; x < bitmap->biWidth; x++){
+            Point P;
+            P.x_posn = x;
+            P.y_posn = y;
+
+            uint32_t pInRect = point_in_rect(A, B, C, D, &P);
+            if(pInRect == 1){
+                uint32_t index = (bitmap->biHeight * y) + x;
+                uint32_t startIndex = (3 * index);
+                memcpy((bitmap->data + startIndex), color, 3);
+            }
+        }
+    }
+
+    return 0;
+}
+
+
 
 
 

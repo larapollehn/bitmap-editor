@@ -139,7 +139,7 @@ uint32_t Bitmap_create(Bitmap * bitmap, const RGB * backgroundColor, uint32_t wi
 
 /**
  * Draw a triangle into a bitmap image
- * @param bitmap
+ * @param bitmap that the triangle will be added to
  * @param A point of triangle
  * @param B point of triangle
  * @param C point of triangle
@@ -150,7 +150,7 @@ uint32_t Bitmap_draw_triangle(Bitmap *bitmap, const Point *A, const Point *B, co
 
 /**
  * Draw circle around point with given radius in bitmap image
- * @param bitmap
+ * @param bitmap that the circle will be added to
  * @param origin Point where the circle originates
  * @param radius of the circle
  * @param color of the circle
@@ -158,5 +158,16 @@ uint32_t Bitmap_draw_triangle(Bitmap *bitmap, const Point *A, const Point *B, co
  */
 uint32_t Bitmap_draw_circle(Bitmap *bitmap, const Point * origin, uint32_t radius, const RGB * color);
 
+/**
+ * Draw a rectangle/parallelogram/square into a bitmap image
+ * @param bitmap that the rectangle will be added to
+ * @param A is Point of rect
+ * @param B is Point of rect
+ * @param C is Point of rect
+ * @param D is Point of rect
+ * @param color of the rect
+ * @return 0 if successful, 1 if failed
+ */
+uint32_t Bitmap_draw_rect(Bitmap *bitmap, const Point * A, const Point * B, const Point * C, const Point * D, RGB * color);
 
 #endif //LIBRARY_BITMAP_H

@@ -256,6 +256,174 @@ void testCase14(){
     assert_equal(0, inTriangle, "failed: point_in_triangle");
 }
 
+/*
+ * test two points with acute angle
+ */
+void testCase15(){
+    Point A;
+    A.x_posn = -6;
+    A.y_posn = 8;
+
+    Point B;
+    B.x_posn = 5;
+    B.y_posn = 12;
+
+    double product = dot_product(&A, &B);
+    assert_equal(66, product, "Wrong: dot_product: %f", product);
+}
+
+/*
+ * test two points with obtuse angle
+ */
+void testCase16(){
+    Point A;
+    A.x_posn = -6;
+    A.y_posn = 8;
+
+    Point B;
+    B.x_posn = 12;
+    B.y_posn = 1;
+
+    double product = dot_product(&A, &B);
+    assert_equal(-64, product, "Wrong: dot_product: %f", product);
+}
+
+/*
+ * test two points that are orthogonal
+ */
+void testCase17(){
+    Point A;
+    A.x_posn = 7;
+    A.y_posn = 0;
+
+    Point B;
+    B.x_posn = 0;
+    B.y_posn = 3;
+
+    double product = dot_product(&A, &B);
+    assert_equal(0, product, "Wrong: dot_product: %f", product);
+}
+
+/*
+ * Test point_in_rect
+ * Point IS in rectangle
+ */
+void testCase18(){
+
+    Point A;
+    A.x_posn = 0;
+    A.y_posn = 10;
+
+    Point B;
+    B.x_posn = 10;
+    B.y_posn = 10;
+
+    Point C;
+    C.x_posn = 10;
+    C.y_posn = 0;
+
+    Point D;
+    D.x_posn = 0;
+    D.y_posn = 0;
+
+    Point P;
+    P.x_posn = 5;
+    P.y_posn = 5;
+
+    uint8_t pInRect = point_in_rect(&A, &B, &C, &D, &P);
+    assert_equal(1, pInRect, "Failed: point_in_rect");
+}
+
+/*
+ * Test point_in_rect
+ * Point is NOT in rectangle
+ */
+void testCase19(){
+
+    Point A;
+    A.x_posn = 0;
+    A.y_posn = 10;
+
+    Point B;
+    B.x_posn = 10;
+    B.y_posn = 10;
+
+    Point C;
+    C.x_posn = 10;
+    C.y_posn = 0;
+
+    Point D;
+    D.x_posn = 0;
+    D.y_posn = 0;
+
+    Point P;
+    P.x_posn = 12;
+    P.y_posn = -3;
+
+    uint8_t pInRect = point_in_rect(&A, &B, &C, &D, &P);
+    assert_equal(0, pInRect, "Failed: point_in_rect");
+}
+
+/*
+ * Test point_in_rect
+ * Point IS in rectangle
+ */
+void testCase20(){
+
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 20;
+
+    Point B;
+    B.x_posn = 32;
+    B.y_posn = 11;
+
+    Point C;
+    C.x_posn = 27;
+    C.y_posn = -16;
+
+    Point D;
+    D.x_posn = -5;
+    D.y_posn = -2;
+
+    Point P;
+    P.x_posn = 13;
+    P.y_posn = 7;
+
+    uint8_t pInRect = point_in_rect(&A, &B, &C, &D, &P);
+    assert_equal(1, pInRect, "Failed: point_in_rect");
+}
+
+/*
+ * Test point_in_rect
+ * Point IS in rectangle
+ */
+void testCase21(){
+
+    Point A;
+    A.x_posn = 1;
+    A.y_posn = 20;
+
+    Point B;
+    B.x_posn = 32;
+    B.y_posn = 11;
+
+    Point C;
+    C.x_posn = 27;
+    C.y_posn = -16;
+
+    Point D;
+    D.x_posn = -5;
+    D.y_posn = -2;
+
+    Point P;
+    P.x_posn = 37;
+    P.y_posn = 2;
+
+    uint8_t pInRect = point_in_rect(&A, &B, &C, &D, &P);
+    assert_equal(0, pInRect, "Failed: point_in_rect");
+}
+
 int main(){
     testCase2();
     testCase3();
@@ -270,5 +438,12 @@ int main(){
     testCase12();
     testCase13();
     testCase14();
+    testCase15();
+    testCase16();
+    testCase17();
+    testCase18();
+    testCase19();
+    testCase20();
+    testCase21();
     return 0;
 }

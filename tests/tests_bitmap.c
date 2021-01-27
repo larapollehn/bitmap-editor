@@ -388,6 +388,192 @@ void testCase9(){
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase9");
 }
 
+/*
+ * Test Bitmap_create and Bitmap_draw_rectangle
+ * create a unicolored bitmap image and draw a rectangle in it
+ * than copy the bitmap into a File
+ */
+void testCase10(){
+
+    // create Bitmap
+    Bitmap bitmap;
+
+    RGB orange;
+    orange.red = 255;
+    orange.green = 165;
+    orange.blue = 0;
+
+    uint32_t created = Bitmap_create(&bitmap, &orange, 400, 400);
+    assert_equal(0, created, "Failed: Bitmap_create - testCase10");
+
+    // draw circle in the newly created Bitmap
+    RGB mint_green;
+    mint_green.red = 211;
+    mint_green.green = 255;
+    mint_green.blue = 206;
+
+    Point A;
+    A.x_posn = 20;
+    A.y_posn = 200;
+
+    Point B;
+    B.x_posn = 200;
+    B.y_posn = 200;
+
+    Point C;
+    C.x_posn = 200;
+    C.y_posn = 20;
+
+    Point D;
+    D.x_posn = 20;
+    D.y_posn = 20;
+
+    uint32_t drawn = Bitmap_draw_rect(&bitmap, &A, &B, &C, &D, &mint_green);
+    assert_equal(0, drawn, "Failed: Bitmap_draw_rect() - testCase10");
+
+    //copy the bitmap into a file
+    FILE * dest = fopen("testCase10.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
+    assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase10");
+}
+
+/*
+ * Test Bitmap_create and Bitmap_draw_rectangle
+ * create a unicolored bitmap image and draw a rectangle in it
+ * than copy the bitmap into a File
+ */
+void testCase11(){
+
+    // create Bitmap
+    Bitmap bitmap;
+
+    RGB orange;
+    orange.red = 255;
+    orange.green = 165;
+    orange.blue = 0;
+
+    uint32_t created = Bitmap_create(&bitmap, &orange, 400, 400);
+    assert_equal(0, created, "Failed: Bitmap_create - testCase11");
+
+    // draw circle in the newly created Bitmap
+    RGB mint_green;
+    mint_green.red = 211;
+    mint_green.green = 255;
+    mint_green.blue = 206;
+
+    Point A;
+    A.x_posn = 100;
+    A.y_posn = 300;
+
+    Point B;
+    B.x_posn = 300;
+    B.y_posn = 300;
+
+    Point C;
+    C.x_posn = 250;
+    C.y_posn = 100;
+
+    Point D;
+    D.x_posn = 50;
+    D.y_posn = 100;
+
+    uint32_t drawn = Bitmap_draw_rect(&bitmap, &A, &B, &C, &D, &mint_green);
+    assert_equal(0, drawn, "Failed: Bitmap_draw_rect() - testCase11");
+
+    //copy the bitmap into a file
+    FILE * dest = fopen("testCase11.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
+    assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase11");
+}
+
+/*
+ * Test Bitmap_create and Bitmap_draw_rectangle and Bitmap_draw_circle and Bitmap_draw_rect
+ * create a unicolored bitmap image and draw a rectangle in it
+ * than copy the bitmap into a File
+ */
+void testCase12(){
+
+    // create Bitmap
+    Bitmap bitmap;
+
+    RGB orange;
+    orange.red = 255;
+    orange.green = 216;
+    orange.blue = 89;
+
+    uint32_t created = Bitmap_create(&bitmap, &orange, 400, 400);
+    assert_equal(0, created, "Failed: Bitmap_create - testCase12");
+
+    // draw triangle in the newly created Bitmap
+    RGB red;
+    red.red = 255;
+    red.green = 25;
+    red.blue = 105;
+
+    Point A2;
+    A2.x_posn = 25;
+    A2.y_posn = 344;
+
+    Point B2;
+    B2.x_posn = 390;
+    B2.y_posn = 312;
+
+    Point C2;
+    C2.x_posn = 200;
+    C2.y_posn = 7;
+
+    uint32_t drawn3 = Bitmap_draw_triangle(&bitmap, &A2, &B2, &C2, &red);
+    assert_equal(0, drawn3, "Failed: Bitmap_draw_triangle() - testCase12");
+
+    // draw circle in the newly created Bitmap
+    RGB green;
+    green.red = 25;
+    green.green = 255;
+    green.blue = 175;
+
+    Point origin;
+    origin.x_posn = 234;
+    origin.y_posn = 287;
+
+    uint32_t radius = 89;
+
+    uint32_t drawn2 = Bitmap_draw_circle(&bitmap, &origin, radius, &green);
+    assert_equal(0, drawn2, "Failed: Bitmap_draw_circle() - testCase12");
+
+    // draw rect in the newly created Bitmap
+    RGB pink;
+    pink.red = 243;
+    pink.green = 166;
+    pink.blue = 192;
+
+    Point A;
+    A.x_posn = 20;
+    A.y_posn = 200;
+
+    Point B;
+    B.x_posn = 200;
+    B.y_posn = 200;
+
+    Point C;
+    C.x_posn = 200;
+    C.y_posn = 20;
+
+    Point D;
+    D.x_posn = 20;
+    D.y_posn = 20;
+
+    uint32_t drawn = Bitmap_draw_rect(&bitmap, &A, &B, &C, &D, &pink);
+    assert_equal(0, drawn, "Failed: Bitmap_draw_rect() - testCase12");
+
+    //copy the bitmap into a file
+    FILE * dest = fopen("testCase12.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
+    assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase12");
+}
+
 void printAllPictureInfos(){
 
     Bitmap bitmap;
@@ -415,6 +601,9 @@ int main(){
     testCase7();
     testCase8();
     testCase9();
+    testCase10();
+    testCase11();
+    testCase12();
     //printAllPictureInfos();
     return 0;
 }

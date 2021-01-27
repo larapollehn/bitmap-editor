@@ -58,3 +58,42 @@ uint8_t point_in_triangle(const Point *A, const Point *B,const Point *C,const Po
         return 0;
     }
 }
+
+double dot_product(const Point *A, const Point *B) {
+    double x_product = A->x_posn * B->x_posn;
+    double y_product = A->y_posn * B->y_posn;
+    double dot_product = x_product + y_product;
+    return dot_product;
+}
+
+uint8_t point_in_rect(const Point *A, const Point *B, const Point *C, const Point *D, const Point *P) {
+
+    // https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not/37865332#37865332
+
+    Point BA;
+    BA.x_posn = B->x_posn - A->x_posn;
+    BA.y_posn = B->y_posn - A->y_posn;
+
+    Point DA;
+    DA.x_posn = D->x_posn - A->x_posn;
+    DA.y_posn = D->y_posn - A->y_posn;
+
+    double BA_magnitude = pow(BA.x_posn, 2.0) + pow(BA.y_posn, 2.0);
+    double DA_magnitude = pow(DA.x_posn, 2.0) + pow(DA.y_posn, 2.0);
+
+    Point PA;
+    PA.x_posn = P->x_posn - A->x_posn;
+    PA.y_posn = P->y_posn - A->y_posn;
+
+    double dot_PA_BA = dot_product(&PA, &BA);
+    double dot_PA_DA = dot_product(&PA, &DA);
+
+    if(((dot_PA_BA >= 0) && (dot_PA_BA <= BA_magnitude)) &&
+       ((dot_PA_DA >= 0) && (dot_PA_DA <= DA_magnitude))){
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+

@@ -77,4 +77,23 @@ uint32_t distance_ptp(const Point * first, const Point * second);
  */
 uint8_t point_in_triangle(const Point * A, const Point * B, const Point * C, const  Point * P);
 
+/**
+ * Calculate the dot product of two Points
+ * @param A is a point
+ * @param B is a point
+ * @return the product of both points
+ */
+double dot_product(const Point * A, const Point * B);
+
+/**
+ * Checks if point P is within/on the rectangle ABCD
+ * @param A is a point
+ * @param B is a point
+ * @param C is a point
+ * @param D is a point
+ * @param P is a point
+ * @return
+ */
+uint8_t point_in_rect(const Point * A, const Point * B, const Point * C, const Point * D, const Point * P);
+
 #endif //BITMAP_EDITOR_UTILS_H
