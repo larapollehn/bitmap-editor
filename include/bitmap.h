@@ -144,7 +144,7 @@ uint32_t Bitmap_create(Bitmap * bitmap, const RGB * backgroundColor, uint32_t wi
  * @param B point of triangle
  * @param C point of triangle
  * @param color of the triangle
- * @return 0 if successful, 1 if failed
+ * @return 0 if successful
  */
 uint32_t Bitmap_draw_triangle(Bitmap *bitmap, const Point *A, const Point *B, const Point *C, const RGB * color);
 
@@ -154,7 +154,7 @@ uint32_t Bitmap_draw_triangle(Bitmap *bitmap, const Point *A, const Point *B, co
  * @param origin Point where the circle originates
  * @param radius of the circle
  * @param color of the circle
- * @return 0 if successful, 1 if failed
+ * @return 0 if successful
  */
 uint32_t Bitmap_draw_circle(Bitmap *bitmap, const Point * origin, uint32_t radius, const RGB * color);
 
@@ -166,7 +166,7 @@ uint32_t Bitmap_draw_circle(Bitmap *bitmap, const Point * origin, uint32_t radiu
  * @param C is Point of rect
  * @param D is Point of rect
  * @param color of the rect
- * @return 0 if successful, 1 if failed
+ * @return 0 if successful
  */
 uint32_t Bitmap_draw_rect(Bitmap *bitmap, const Point * A, const Point * B, const Point * C, const Point * D, RGB * color);
 
