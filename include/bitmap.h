@@ -138,7 +138,7 @@ uint32_t Bitmap_create(Bitmap * bitmap, const RGB * backgroundColor, uint32_t wi
 //-#########################################################################
 
 /**
- * Draw a triangle into a bitmap image
+ * Draw a triangle into a bitmap image (in place)
  * @param bitmap that the triangle will be added to
  * @param A point of triangle
  * @param B point of triangle
@@ -149,7 +149,7 @@ uint32_t Bitmap_create(Bitmap * bitmap, const RGB * backgroundColor, uint32_t wi
 uint32_t Bitmap_draw_triangle(Bitmap *bitmap, const Point *A, const Point *B, const Point *C, const RGB * color);
 
 /**
- * Draw circle around point with given radius in bitmap image
+ * Draw circle around point with given radius in bitmap image (in place)
  * @param bitmap that the circle will be added to
  * @param origin Point where the circle originates
  * @param radius of the circle
