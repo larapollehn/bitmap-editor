@@ -11,10 +11,10 @@
  * Image: 8bpp with colorTable
  * Scan image and test the created bitmap on accuracy
  */
-void testCase1(){
+void testCase1() {
     Bitmap bitmap;
 
-    FILE * image = fopen("all_gray.bmp", "rb");
+    FILE *image = fopen("all_gray.bmp", "rb");
 
     uint32_t scanned = Bitmap_scan(image, &bitmap);
     assert_equal(0, scanned, "Failed: Bitmap_scan - testCase1");
@@ -41,16 +41,16 @@ void testCase1(){
 
     // check the colorTable entries
     // for this specific bitmap image the colorTables entries consist of the index/position for all three color channels
-    for(int i = 0; i < bitmap.colorTable_size; i++){
-        assert_equal(i, (bitmap.colorTable +i)->red, "Wrong: colorTable at index %d color red", i);
-        assert_equal(i, (bitmap.colorTable +i)->green, "Wrong: colorTable at index %d color green", i);
-        assert_equal(i, (bitmap.colorTable +i)->blue, "Wrong: colorTable at index %d color blue", i);
+    for (int i = 0; i < bitmap.colorTable_size; i++) {
+        assert_equal(i, (bitmap.colorTable + i)->red, "Wrong: colorTable at index %d color red", i);
+        assert_equal(i, (bitmap.colorTable + i)->green, "Wrong: colorTable at index %d color green", i);
+        assert_equal(i, (bitmap.colorTable + i)->blue, "Wrong: colorTable at index %d color blue", i);
     }
 
     // check the pixel data
     // for this specific image all of them point to colorTable entry 135
-    for(int i = 0; i < bitmap.data_size; i++){
-        assert_equal(135, *(bitmap.data +i), "Wrong: data at index %d", i);
+    for (int i = 0; i < bitmap.data_size; i++) {
+        assert_equal(135, *(bitmap.data + i), "Wrong: data at index %d", i);
     }
 
     fclose(image);
@@ -60,7 +60,7 @@ void testCase1(){
 /*
  * Test Bitmap_create
  */
-void testCase2(){
+void testCase2() {
     Bitmap bitmap;
 
     RGB mint_green;
@@ -92,10 +92,10 @@ void testCase2(){
     assert_equal(0, bitmap.biYPelsPerMeter, "Wrong: biYPelsPerMeter");
     assert_equal(0, bitmap.bfReserved, "Wrong: bfReserved");
 
-    for(int i = 0; i < (bitmap.data_size / sizeof (RGB)); i+=3){
+    for (int i = 0; i < (bitmap.data_size / sizeof(RGB)); i += 3) {
         assert_equal(*(bitmap.data + i), mint_green.blue, "Wrong: data");
-        assert_equal(*(bitmap.data + i +1), mint_green.green, "Wrong: data");
-        assert_equal(*(bitmap.data + i +2), mint_green.red, "Wrong: data");
+        assert_equal(*(bitmap.data + i + 1), mint_green.green, "Wrong: data");
+        assert_equal(*(bitmap.data + i + 2), mint_green.red, "Wrong: data");
     }
 
     Bitmap_destroy(&bitmap);
@@ -105,7 +105,7 @@ void testCase2(){
  * Test Bitmap_create
  * create Bitmap and copy into file for visual test
  */
-void testCase3(){
+void testCase3() {
     Bitmap bitmap;
 
     RGB orange;
@@ -116,7 +116,7 @@ void testCase3(){
     uint32_t created = Bitmap_create(&bitmap, &orange, 8, 2);
     assert_equal(0, created, "Failed: Bitmap_create - testCase2");
 
-    FILE * dest = fopen("testCase3.bmp", "wb");
+    FILE *dest = fopen("testCase3.bmp", "wb");
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile  - testCase2");
 
@@ -129,21 +129,21 @@ void testCase3(){
  * Scan bitmap, copy into new file and scan the copy.
  * Compare both versions of the same bitmap image
  */
-void testCase4(){
+void testCase4() {
     Bitmap bitmap;
 
-    FILE * image = fopen("testCase3.bmp", "rb");
+    FILE *image = fopen("testCase3.bmp", "rb");
     uint32_t scanned = Bitmap_scan(image, &bitmap);
     assert_equal(0, scanned, "Failed: Bitmap_scan - testCase1");
 
-    FILE * dest = fopen("testCase3_copy.bmp", "wb");
+    FILE *dest = fopen("testCase3_copy.bmp", "wb");
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile  - testCase2");
     rewind(dest);
 
     Bitmap copy;
 
-    FILE * bmp_copy = fopen("testCase3_copy.bmp", "rb");
+    FILE *bmp_copy = fopen("testCase3_copy.bmp", "rb");
     uint32_t scanned_copy = Bitmap_scan(bmp_copy, &copy);
     assert_equal(0, scanned_copy, "Failed: Bitmap_scan - testCase1");
 
@@ -166,8 +166,8 @@ void testCase4(){
     assert_equal(copy.biYPelsPerMeter, bitmap.biYPelsPerMeter, "Wrong: biYPelsPerMeter");
     assert_equal(copy.bfReserved, bitmap.bfReserved, "Wrong: bfReserved");
 
-    for(int i = 0; i < bitmap.data_size; i++){
-        assert_equal(*(copy.data +i), *(bitmap.data +i), "Wrong: data at index %d", i);
+    for (int i = 0; i < bitmap.data_size; i++) {
+        assert_equal(*(copy.data + i), *(bitmap.data + i), "Wrong: data at index %d", i);
     }
 
     fclose(image);
@@ -179,25 +179,25 @@ void testCase4(){
  * grayscale a bitmap image with 24 bpp and no colorTable
  * check bitmap data on accuracy
  */
-void testCase5(){
+void testCase5() {
 
     char filepath[] = "testCase3.bmp";
 
     Bitmap bitmap;
 
-    FILE * bmp = fopen(filepath, "rb");
+    FILE *bmp = fopen(filepath, "rb");
 
     uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
-    uint32_t expected_gray = (*(bitmap.data ) + *(bitmap.data + 1) + *(bitmap.data + 2)) / 3;
+    uint32_t expected_gray = (*(bitmap.data) + *(bitmap.data + 1) + *(bitmap.data + 2)) / 3;
 
     Bitmap_naive_grayscaling_px(&bitmap);
 
-    for(int i = 0; i < bitmap.data_size; i++){
+    for (int i = 0; i < bitmap.data_size; i++) {
         // check with the manually and programmatically computed gray-tone
-        assert_equal(140, *(uint8_t *)(bitmap.data + i), "Grayscale did not work");
-        assert_equal(expected_gray, *(uint8_t *)(bitmap.data + i), "Failed: gray_tone");
+        assert_equal(140, *(uint8_t *) (bitmap.data + i), "Grayscale did not work");
+        assert_equal(expected_gray, *(uint8_t *) (bitmap.data + i), "Failed: gray_tone");
     }
 
     Bitmap_destroy(&bitmap);
@@ -210,29 +210,29 @@ void testCase5(){
  * check bitmap data on accuracy
  * Expects data to not change, gray stays gray
  */
-void testCase6(){
+void testCase6() {
 
     char filepath[] = "all_gray.bmp";
 
     Bitmap bitmap;
 
-    FILE * bmp = fopen(filepath, "rb");
+    FILE *bmp = fopen(filepath, "rb");
 
     uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
 
     uint32_t colorTable_index = *bitmap.data;
 
-    Color * color = bitmap.colorTable + colorTable_index;
+    Color *color = bitmap.colorTable + colorTable_index;
 
     uint32_t expected_gray = (color->blue + color->green + color->red) / 3;
 
     Bitmap_naive_grayscaling_ct(&bitmap);
 
-    for(int i = 0; i < bitmap.data_size; i++){
+    for (int i = 0; i < bitmap.data_size; i++) {
         // check with the manually and programmatically computed gray-tone
-        assert_equal(135, *(uint8_t *)(bitmap.data + i), "Grayscale did not work");
-        assert_equal(expected_gray, *(uint8_t *)(bitmap.data + i), "Failed to compute gray");
+        assert_equal(135, *(uint8_t *) (bitmap.data + i), "Grayscale did not work");
+        assert_equal(expected_gray, *(uint8_t *) (bitmap.data + i), "Failed to compute gray");
     }
 
     Bitmap_destroy(&bitmap);
@@ -243,7 +243,7 @@ void testCase6(){
  * Test Bitmap_create and Bitmap_draw_triangle
  * create a unicolored bitmap image and draw a triangle in it
  */
-void testCase7(){
+void testCase7() {
 
     // create Bitmap
     Bitmap bitmap;
@@ -279,7 +279,7 @@ void testCase7(){
 
     //copy the bitmap into a file
 
-    FILE * dest = fopen("testCase7.bmp", "wb");
+    FILE *dest = fopen("testCase7.bmp", "wb");
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase7");
@@ -290,7 +290,7 @@ void testCase7(){
  * create a unicolored bitmap image and draw a triangle and circle in it
  * than copy the bitmap into the file
  */
-void testCase8(){
+void testCase8() {
 
     // create Bitmap
     Bitmap bitmap;
@@ -341,7 +341,7 @@ void testCase8(){
 
     //copy the bitmap into a file
 
-    FILE * dest = fopen("testCase8.bmp", "wb");
+    FILE *dest = fopen("testCase8.bmp", "wb");
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase8");
@@ -352,7 +352,7 @@ void testCase8(){
  * create a unicolored bitmap image and draw a circle in it
  * than copy the bitmap into a File
  */
-void testCase9(){
+void testCase9() {
 
     // create Bitmap
     Bitmap bitmap;
@@ -382,7 +382,7 @@ void testCase9(){
 
     //copy the bitmap into a file
 
-    FILE * dest = fopen("testCase9.bmp", "wb");
+    FILE *dest = fopen("testCase9.bmp", "wb");
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase9");
@@ -393,7 +393,7 @@ void testCase9(){
  * create a unicolored bitmap image and draw a rectangle in it
  * than copy the bitmap into a File
  */
-void testCase10(){
+void testCase10() {
 
     // create Bitmap
     Bitmap bitmap;
@@ -432,7 +432,7 @@ void testCase10(){
     assert_equal(0, drawn, "Failed: Bitmap_draw_rect() - testCase10");
 
     //copy the bitmap into a file
-    FILE * dest = fopen("testCase10.bmp", "wb");
+    FILE *dest = fopen("testCase10.bmp", "wb");
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase10");
@@ -443,7 +443,7 @@ void testCase10(){
  * create a unicolored bitmap image and draw a rectangle in it
  * than copy the bitmap into a File
  */
-void testCase11(){
+void testCase11() {
 
     // create Bitmap
     Bitmap bitmap;
@@ -482,7 +482,7 @@ void testCase11(){
     assert_equal(0, drawn, "Failed: Bitmap_draw_rect() - testCase11");
 
     //copy the bitmap into a file
-    FILE * dest = fopen("testCase11.bmp", "wb");
+    FILE *dest = fopen("testCase11.bmp", "wb");
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase11");
@@ -493,7 +493,7 @@ void testCase11(){
  * create a unicolored bitmap image and draw a rectangle in it
  * than copy the bitmap into a File
  */
-void testCase12(){
+void testCase12() {
 
     // create Bitmap
     Bitmap bitmap;
@@ -568,18 +568,94 @@ void testCase12(){
     assert_equal(0, drawn, "Failed: Bitmap_draw_rect() - testCase12");
 
     //copy the bitmap into a file
-    FILE * dest = fopen("testCase12.bmp", "wb");
+    FILE *dest = fopen("testCase12.bmp", "wb");
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase12");
 }
 
-void printAllPictureInfos(){
+void testCase13() {
+    // create Bitmap
+    Bitmap bitmap;
+
+    RGB color;
+    color.red = 255;
+    color.green = 128;
+    color.blue = 237;
+
+    uint32_t created = Bitmap_create(&bitmap, &color, 4, 4);
+    assert_equal(0, created, "Failed: Bitmap_create - testCase13");
+
+    //copy the bitmap into a file pre-change
+    FILE *dest = fopen("testCase13_1.bmp", "wb");
+
+    uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
+    assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase13");
+
+    // build another bitmap with the same setup
+    Bitmap copy;
+
+    uint32_t created_copy = Bitmap_create(&copy, &color, 4, 4);
+    assert_equal(0, created_copy, "Failed: Bitmap_create - testCase13");
+
+    //check if both bitmaps are the same before any change was made
+    for (int i = 0; i < bitmap.data_size; i++) {
+        RGB * bitmap_pixel = (RGB *) (bitmap.data + i);
+        RGB * copy_pixel = (RGB *) (copy.data + i);
+        assert_equal(bitmap_pixel->red, copy_pixel->red, "Bitmaps are not the same - testCase13");
+        assert_equal(bitmap_pixel->green, copy_pixel->green, "Bitmaps are not the same - testCase13");
+        assert_equal(bitmap_pixel->blue, copy_pixel->blue, "Bitmaps are not the same - testCase13");
+    }
+
+
+    // apply convolution and check if the two bitmaps still are equal
+    // the identity kernel does not change the picture
+    // copy was not changed
+    float kernel[] = {0, 0, 0, 0, 1, 0, 0, 0, 0}; // Identity Kernel
+    Bitmap_convolution(&bitmap, kernel, 1);
+
+    for (int i = 0; i < bitmap.data_size; i++) {
+        RGB * bitmap_pixel = (RGB *) (bitmap.data + i);
+        RGB * copy_pixel = (RGB *) (copy.data + i);
+        assert_equal(bitmap_pixel->red, copy_pixel->red, "Bitmaps are not the same - testCase13");
+        assert_equal(bitmap_pixel->green, copy_pixel->green, "Bitmaps are not the same - testCase13");
+        assert_equal(bitmap_pixel->blue, copy_pixel->blue, "Bitmaps are not the same - testCase13");
+    }
+
+    //copy the mutated bitmap into a file
+    FILE *dest_2 = fopen("testCase13_2.bmp", "wb");
+
+    uint32_t copied_2 = Bitmap_copyIntoFile(dest_2, &bitmap);
+    assert_equal(0, copied_2, "Failed: Bitmap_copyIntoFile() - testCase13");
+}
+
+void testCase14() {
+    Bitmap bitmap;
+
+    FILE *image = fopen("lena.bmp", "rb");
+
+    uint32_t scanned = Bitmap_scan(image, &bitmap);
+    assert_equal(0, scanned, "Failed: Bitmap_scan - testCase14");
+
+    // apply convolution and check if the two bitmaps still are equal
+    // the identity kernel does not change the picture
+    // copy was not changed
+    float kernel[] = {1, 0, -1, 0, 0, 0, -1, 0, 1}; // Edge Detection
+    Bitmap_convolution(&bitmap, kernel, 1);
+
+    //copy the mutated bitmap into a file
+    FILE *dest_2 = fopen("testCase14_lena.bmp", "wb");
+
+    uint32_t copied_2 = Bitmap_copyIntoFile(dest_2, &bitmap);
+    assert_equal(0, copied_2, "Failed: Bitmap_copyIntoFile() - testCase14");
+}
+
+void printAllPictureInfos() {
 
     Bitmap bitmap;
 
     // open bmp picture and scan into Bitmap
-    FILE * bmp = fopen("all_gray.bmp", "rb");
+    FILE *bmp = fopen("all_gray.bmp", "rb");
 
     uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
@@ -591,7 +667,8 @@ void printAllPictureInfos(){
 
 }
 
-int main(){
+int main() {
+    /*
     testCase1();
     testCase2();
     testCase3();
@@ -604,6 +681,9 @@ int main(){
     testCase10();
     testCase11();
     testCase12();
+     */
+    //testCase13();
+    testCase14();
     //printAllPictureInfos();
     return 0;
 }
