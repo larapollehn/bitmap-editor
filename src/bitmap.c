@@ -329,7 +329,7 @@ uint32_t Bitmap_draw_rect(Bitmap *bitmap, const Point *A, const Point *B, const 
     return 0;
 }
 
-uint32_t Bitmap_convolution(Bitmap *bitmap, const float *kernel, float divider) {
+uint32_t Bitmap_convolution(Bitmap *bitmap, const uint8_t *kernel, uint8_t divider) {
 
     /*
      * Identity Kernel
@@ -343,27 +343,27 @@ uint32_t Bitmap_convolution(Bitmap *bitmap, const float *kernel, float divider) 
             int32_t index = (bitmap->biHeight * y) + x;
 
             // get the indices of all kernel relevant data_pixels
-            RGB * self = bitmap->data + (index*3);
-            RGB * left = bitmap->data + ((index*3) - 1);
-            RGB * right = bitmap->data + ((index*3) + 1);
+            RGB * self = (RGB *) (bitmap->data + (index*3));
+            RGB * left = self - 1;
+            RGB * right = self + 1;
 
-            RGB * top = bitmap->data + ((index*3) - bitmap->biWidth);
-            RGB * top_left = bitmap->data + (((index*3) - bitmap->biWidth) - 1);
-            RGB * top_right = bitmap->data + (((index*3) - bitmap->biWidth) + 1);
+            RGB * top = (RGB *) (bitmap->data + ((index - bitmap->biWidth)*3));
+            RGB * top_left = top - 1;
+            RGB * top_right = top + 1;
 
-            RGB * bottom = bitmap->data + ((index*3) + bitmap->biWidth);
-            RGB * bottom_left = bitmap->data + (((index*3) + bitmap->biWidth) - 1);
-            RGB * bottom_right = bitmap->data + (((index*3) + bitmap->biWidth) + 1);
+            RGB * bottom = (RGB *)(bitmap->data + ((index + bitmap->biWidth)*3));
+            RGB * bottom_left = bottom - 1;
+            RGB * bottom_right = bottom + 1;
 
-            float red = ((top_left->red * kernel[0]) + (top->red * kernel[1]) + (top_right->red * kernel[2]) +
+            uint8_t red = ((top_left->red * kernel[0]) + (top->red * kernel[1]) + (top_right->red * kernel[2]) +
                         (left->red * kernel[3]) + (self->red * kernel[4]) + (right->red * kernel[5]) +
                         (bottom_left->red * kernel[6]) + (bottom->red * kernel[7]) + (bottom_right->red * kernel[8])) / divider;
 
-            float green = ((top_left->green * kernel[0]) + (top->green * kernel[1]) + (top_right->green * kernel[2]) +
+            uint8_t green = ((top_left->green * kernel[0]) + (top->green * kernel[1]) + (top_right->green * kernel[2]) +
                           (left->green * kernel[3]) + (self->green * kernel[4]) + (right->green * kernel[5]) +
                           (bottom_left->green * kernel[6]) + (bottom->green * kernel[7]) + (bottom_right->green * kernel[8])) / divider;
 
-            float blue = ((top_left->blue * kernel[0]) + (top->blue * kernel[1]) + (top_right->blue * kernel[2]) +
+            uint8_t blue = ((top_left->blue * kernel[0]) + (top->blue * kernel[1]) + (top_right->blue * kernel[2]) +
                          (left->blue * kernel[3]) + (self->blue * kernel[4]) + (right->blue * kernel[5]) +
                          (bottom_left->blue * kernel[6]) + (bottom->blue * kernel[7]) + (bottom_right->blue * kernel[8])) / divider;
 

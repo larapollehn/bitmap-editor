@@ -632,7 +632,7 @@ void testCase13() {
     // apply convolution and check if the two bitmaps still are equal
     // the identity kernel does not change the picture
     // copy was not changed
-    float kernel[] = {0, 0, 0, 0, 1, 0, 0, 0, 0}; // Identity Kernel
+    uint8_t kernel[] = {0, 0, 0, 0, 1, 0, 0, 0, 0}; // Identity Kernel
     Bitmap_convolution(&bitmap, kernel, 1);
 
     for (int i = 0; i < bitmap.data_size; i++) {
@@ -669,7 +669,7 @@ void testCase14() {
     // apply convolution and check if the two bitmaps still are equal
     // the identity kernel does not change the picture
     // copy was not changed
-    float kernel[] = {1, 1, 1, 1, 1, 1, 1, 1, 1}; // Box Blur
+    uint8_t kernel[] = {1, 1, 1, 1, 1, 1, 1, 1, 1}; // Box Blur
     Bitmap_convolution(&bitmap, kernel, 9);
 
     //copy the mutated bitmap into a file
@@ -697,7 +697,7 @@ void testCase15() {
     // apply convolution and check if the two bitmaps still are equal
     // the identity kernel does not change the picture
     // copy was not changed
-    float kernel[] = {0,0,0,0,1,0,0,0,0}; // Gaussian Blur
+    uint8_t kernel[] = {0,0,0,0,1,0,0,0,0}; // Gaussian Blur
     Bitmap_convolution(&bitmap, kernel, 1);
 
     //copy the mutated bitmap into a file
