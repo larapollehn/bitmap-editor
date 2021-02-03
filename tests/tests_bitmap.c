@@ -283,6 +283,9 @@ void testCase7() {
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase7");
+
+    Bitmap_destroy(&bitmap);
+    fclose(dest);
 }
 
 /*
@@ -345,6 +348,9 @@ void testCase8() {
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase8");
+
+    Bitmap_destroy(&bitmap);
+    fclose(dest);
 }
 
 /*
@@ -386,6 +392,9 @@ void testCase9() {
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase9");
+
+    Bitmap_destroy(&bitmap);
+    fclose(dest);
 }
 
 /*
@@ -436,6 +445,9 @@ void testCase10() {
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase10");
+
+    Bitmap_destroy(&bitmap);
+    fclose(dest);
 }
 
 /*
@@ -486,6 +498,9 @@ void testCase11() {
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase11");
+
+    Bitmap_destroy(&bitmap);
+    fclose(dest);
 }
 
 /*
@@ -572,8 +587,14 @@ void testCase12() {
 
     uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
     assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase12");
+
+    Bitmap_destroy(&bitmap);
+    fclose(dest);
 }
 
+/**
+ * Test Bitmap_convolution with Identity Kernel
+ */
 void testCase13() {
     // create Bitmap
     Bitmap bitmap;
@@ -627,8 +648,16 @@ void testCase13() {
 
     uint32_t copied_2 = Bitmap_copyIntoFile(dest_2, &bitmap);
     assert_equal(0, copied_2, "Failed: Bitmap_copyIntoFile() - testCase13");
+
+    Bitmap_destroy(&bitmap);
+    Bitmap_destroy(&copy);
+    fclose(dest);
+    fclose(dest_2);
 }
 
+/**
+ * Test Bitmap_convolution with Box Blur Kernel
+ */
 void testCase14() {
     Bitmap bitmap;
 
@@ -640,14 +669,76 @@ void testCase14() {
     // apply convolution and check if the two bitmaps still are equal
     // the identity kernel does not change the picture
     // copy was not changed
-    float kernel[] = {1, 0, -1, 0, 0, 0, -1, 0, 1}; // Edge Detection
-    Bitmap_convolution(&bitmap, kernel, 1);
+    float kernel[] = {1, 1, 1, 1, 1, 1, 1, 1, 1}; // Box Blur
+    Bitmap_convolution(&bitmap, kernel, 9);
 
     //copy the mutated bitmap into a file
     FILE *dest_2 = fopen("testCase14_lena.bmp", "wb");
 
     uint32_t copied_2 = Bitmap_copyIntoFile(dest_2, &bitmap);
     assert_equal(0, copied_2, "Failed: Bitmap_copyIntoFile() - testCase14");
+
+    Bitmap_destroy(&bitmap);
+    fclose(image);
+    fclose(dest_2);
+}
+
+/**
+ * Test Bitmap_convolution with Gaussian Blur
+ */
+void testCase15() {
+    Bitmap bitmap;
+
+    FILE *image = fopen("lena.bmp", "rb");
+
+    uint32_t scanned = Bitmap_scan(image, &bitmap);
+    assert_equal(0, scanned, "Failed: Bitmap_scan - testCase15");
+
+    // apply convolution and check if the two bitmaps still are equal
+    // the identity kernel does not change the picture
+    // copy was not changed
+    float kernel[] = {0,0,0,0,1,0,0,0,0}; // Gaussian Blur
+    Bitmap_convolution(&bitmap, kernel, 1);
+
+    //copy the mutated bitmap into a file
+    FILE *dest_2 = fopen("testCase15_lena.bmp", "wb");
+
+    uint32_t copied_2 = Bitmap_copyIntoFile(dest_2, &bitmap);
+    assert_equal(0, copied_2, "Failed: Bitmap_copyIntoFile() - testCase15");
+
+    Bitmap_destroy(&bitmap);
+    fclose(image);
+    fclose(dest_2);
+}
+
+/**
+ * Test Bitmap_convolution with Identity Kernel
+ */
+void testCase16() {
+    // create Bitmap
+    Bitmap bitmap;
+
+    RGB color;
+    color.red = 255;
+    color.green = 128;
+    color.blue = 237;
+
+    uint32_t created = Bitmap_create(&bitmap, &color, 8, 8);
+    assert_equal(0, created, "Failed: Bitmap_create - testCase16");
+
+
+    // apply convolution
+    float kernel[] = {1,2,1,2,4,2,1,2,1}; // Gaussian Blur
+    Bitmap_convolution(&bitmap, kernel, 16);
+
+    //copy the mutated bitmap into a file
+    FILE *dest_2 = fopen("testCase16.bmp", "wb");
+
+    uint32_t copied_2 = Bitmap_copyIntoFile(dest_2, &bitmap);
+    assert_equal(0, copied_2, "Failed: Bitmap_copyIntoFile() - testCase16");
+
+    Bitmap_destroy(&bitmap);
+    fclose(dest_2);
 }
 
 void printAllPictureInfos() {
@@ -683,7 +774,9 @@ int main() {
     testCase12();
      */
     //testCase13();
-    testCase14();
+    //testCase14();
+    //testCase15();
+    testCase16();
     //printAllPictureInfos();
     return 0;
 }

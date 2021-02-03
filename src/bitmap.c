@@ -343,17 +343,17 @@ uint32_t Bitmap_convolution(Bitmap *bitmap, const float *kernel, float divider) 
             int32_t index = (bitmap->biHeight * y) + x;
 
             // get the indices of all kernel relevant data_pixels
-            RGB * self = bitmap->data + index;
-            RGB * left = bitmap->data + (index - 1);
-            RGB * right = bitmap->data + (index + 1);
+            RGB * self = bitmap->data + (index*3);
+            RGB * left = bitmap->data + ((index*3) - 1);
+            RGB * right = bitmap->data + ((index*3) + 1);
 
-            RGB * top = bitmap->data + (index - bitmap->biWidth);
-            RGB * top_left = bitmap->data + ((index - bitmap->biWidth) - 1);
-            RGB * top_right = bitmap->data + ((index - bitmap->biWidth) + 1);
+            RGB * top = bitmap->data + ((index*3) - bitmap->biWidth);
+            RGB * top_left = bitmap->data + (((index*3) - bitmap->biWidth) - 1);
+            RGB * top_right = bitmap->data + (((index*3) - bitmap->biWidth) + 1);
 
-            RGB * bottom = bitmap->data + (index + bitmap->biWidth);
-            RGB * bottom_left = bitmap->data + ((index + bitmap->biWidth) - 1);
-            RGB * bottom_right = bitmap->data + ((index + bitmap->biWidth) + 1);
+            RGB * bottom = bitmap->data + ((index*3) + bitmap->biWidth);
+            RGB * bottom_left = bitmap->data + (((index*3) + bitmap->biWidth) - 1);
+            RGB * bottom_right = bitmap->data + (((index*3) + bitmap->biWidth) + 1);
 
             float red = ((top_left->red * kernel[0]) + (top->red * kernel[1]) + (top_right->red * kernel[2]) +
                         (left->red * kernel[3]) + (self->red * kernel[4]) + (right->red * kernel[5]) +
