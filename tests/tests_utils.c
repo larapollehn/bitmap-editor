@@ -425,6 +425,7 @@ void testCase21(){
 }
 
 int main(){
+    /*
     testCase2();
     testCase3();
     testCase4();
@@ -445,5 +446,6 @@ int main(){
     testCase19();
     testCase20();
     testCase21();
+     */
     return 0;
 }

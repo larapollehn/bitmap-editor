@@ -17,11 +17,11 @@ uint32_t Bitmap_scan(FILE *source, Bitmap *bitmap) {
 
     // Fill the given bitmap with information for the headers
     uint32_t readElements = fread(bitmap, sizeof(Bitmap), 1, source);
-    check_exit(readElements == 1, "error: trying to read the content of a file\n");
+    check_exit(readElements == 1, "error: trying to read the content of a file\n")
 
     // check for specific requirements a picture has to have to be processed
     check_exit(bitmap->biCompression == 0,
-               "Error: compressed file"); // no compressed files allowed, only allowed file format is BI_RGB
+               "Error: compressed file") // no compressed files allowed, only allowed file format is BI_RGB
 
     // determine if a colorTable is present and if so its size
     uint32_t size_colorTable;
@@ -39,11 +39,11 @@ uint32_t Bitmap_scan(FILE *source, Bitmap *bitmap) {
     // initialize the colorTable or assign Null-pointer if no colorTable is used
     if (size_colorTable > 0) {
         bitmap->colorTable = malloc(sizeof(Color) * size_colorTable);
-        check_mem(bitmap->colorTable);
+        check_mem(bitmap->colorTable)
 
         fseek(source, offsetof(Bitmap, colorTable), SEEK_SET);
         uint32_t readColors = fread(bitmap->colorTable, sizeof(Color), size_colorTable, source);
-        check_exit(readColors == size_colorTable, "error: trying to read the content of a file");
+        check_exit(readColors == size_colorTable, "error: trying to read the content of a file")
 
     } else {
         bitmap->colorTable = NULL;
@@ -71,18 +71,18 @@ uint32_t Bitmap_scan(FILE *source, Bitmap *bitmap) {
             size_data = (bitmap->biWidth * bitmap->biHeight) * 4;
         }
     }
-    check_exit(size_data > 0, "Error: image data is corrupt or missing");
+    check_exit(size_data > 0, "Error: image data is corrupt or missing")
     bitmap->data_size = size_data;
 
 
     // allocate space for the image data
     bitmap->data = malloc(sizeof(uint8_t) * size_data);
-    check_mem(bitmap->data);
+    check_mem(bitmap->data)
 
     // read image data into the bitmap
     fseek(source, bitmap->bfOffBits, SEEK_SET);
     uint32_t readData = fread(bitmap->data, sizeof(uint8_t), size_data, source);
-    check_exit(readData == size_data, "error: trying to read the content of a file");
+    check_exit(readData == size_data, "error: trying to read the content of a file")
 
     return 0;
 
@@ -95,17 +95,17 @@ uint32_t Bitmap_copyIntoFile(FILE *dest, Bitmap *bitmap) {
 
     uint32_t writtenHeaders = fwrite(bitmap, sizeof(uint8_t), (FILEHEADER_SIZE + bitmap->biSize),
                                      dest); // copy the file and info-header into the bmp pic
-    check_exit(writtenHeaders == (FILEHEADER_SIZE + bitmap->biSize), "Failed: writing headers");
+    check_exit(writtenHeaders == (FILEHEADER_SIZE + bitmap->biSize), "Failed: writing headers")
 
     if (bitmap->colorTable_size > 0) {
         uint32_t writtenColorTable = fwrite(bitmap->colorTable, sizeof(Color), bitmap->colorTable_size,
                                             dest); // copy only the colorTable (not colorTable_size) into the bmp pic
-        check_exit(writtenColorTable == bitmap->colorTable_size, "Failed: writing colorTable");
+        check_exit(writtenColorTable == bitmap->colorTable_size, "Failed: writing colorTable")
     }
 
     uint32_t writtenData = fwrite(bitmap->data, sizeof(uint8_t), bitmap->data_size,
                                   dest); // copy only the data (not data_size) into bmp pic
-    check_exit(writtenData == bitmap->data_size, "Failed: writing data");
+    check_exit(writtenData == bitmap->data_size, "Failed: writing data")
 
     return 0;
     error_handling:
@@ -250,7 +250,7 @@ uint32_t Bitmap_create(Bitmap *bitmap, const RGB *backgroundColor, uint32_t widt
             size_data = (bitmap->biWidth * bitmap->biHeight) * 4;
         }
     }
-    check_exit(size_data > 0, "size_data should not be zero");
+    check_exit(size_data > 0, "size_data should not be zero")
 
     // allocate the bitmap data array
     bitmap->data = malloc(sizeof(uint8_t) * size_data);
@@ -329,7 +329,12 @@ uint32_t Bitmap_draw_rect(Bitmap *bitmap, const Point *A, const Point *B, const 
     return 0;
 }
 
-uint32_t Bitmap_convolution(Bitmap *bitmap, const uint8_t *kernel, uint8_t divider) {
+uint32_t Bitmap_convolution(Bitmap *bitmap, const int32_t *kernel, float divider) {
+
+    // copy the bitmap data
+    uint8_t * copy_data = malloc(sizeof(uint8_t) * bitmap->data_size);
+    memcpy(copy_data, bitmap->data, bitmap->data_size);
+
 
     /*
      * Identity Kernel
@@ -338,34 +343,64 @@ uint32_t Bitmap_convolution(Bitmap *bitmap, const uint8_t *kernel, uint8_t divid
      *                   0, 0, 0}
      */
 
-    for (int y = 1; y < bitmap->biHeight - 1; y++) {
-        for (int x = 1; x < bitmap->biWidth - 1; x++) {
+    for (int32_t y = 1; y < bitmap->biHeight - 1; y++) {
+        for (int32_t x = 1; x < bitmap->biWidth - 1; x++) {
             int32_t index = (bitmap->biHeight * y) + x;
 
             // get the indices of all kernel relevant data_pixels
-            RGB * self = (RGB *) (bitmap->data + (index*3));
+            RGB * self = (RGB *) (copy_data + (index*3));
             RGB * left = self - 1;
             RGB * right = self + 1;
 
-            RGB * top = (RGB *) (bitmap->data + ((index - bitmap->biWidth)*3));
+            RGB * top = (RGB *) (copy_data + ((index - bitmap->biWidth)*3));
             RGB * top_left = top - 1;
             RGB * top_right = top + 1;
 
-            RGB * bottom = (RGB *)(bitmap->data + ((index + bitmap->biWidth)*3));
+            RGB * bottom = (RGB *)(copy_data + ((index + bitmap->biWidth)*3));
             RGB * bottom_left = bottom - 1;
             RGB * bottom_right = bottom + 1;
 
-            uint8_t red = ((top_left->red * kernel[0]) + (top->red * kernel[1]) + (top_right->red * kernel[2]) +
-                        (left->red * kernel[3]) + (self->red * kernel[4]) + (right->red * kernel[5]) +
-                        (bottom_left->red * kernel[6]) + (bottom->red * kernel[7]) + (bottom_right->red * kernel[8])) / divider;
+            int32_t red_1 = top_left->red * kernel[0];
+            int32_t red_2 = top->red * kernel[1];
+            int32_t red_3 = top_right->red * kernel[2];
+            int32_t red_4 = left->red * kernel[3];
+            int32_t red_5 = self->red * kernel[4];
+            int32_t red_6 = right->red * kernel[5];
+            int32_t red_7 = bottom_left->red * kernel[6];
+            int32_t red_8 = bottom->red * kernel[7];
+            int32_t red_9 = bottom_right->red * kernel[8];
 
-            uint8_t green = ((top_left->green * kernel[0]) + (top->green * kernel[1]) + (top_right->green * kernel[2]) +
-                          (left->green * kernel[3]) + (self->green * kernel[4]) + (right->green * kernel[5]) +
-                          (bottom_left->green * kernel[6]) + (bottom->green * kernel[7]) + (bottom_right->green * kernel[8])) / divider;
+            int32_t red_sum = red_1 + red_2 + red_3 + red_4 + red_5 + red_6 + red_7 + red_8 + red_9;
+            float red = (float)red_sum / divider;
 
-            uint8_t blue = ((top_left->blue * kernel[0]) + (top->blue * kernel[1]) + (top_right->blue * kernel[2]) +
-                         (left->blue * kernel[3]) + (self->blue * kernel[4]) + (right->blue * kernel[5]) +
-                         (bottom_left->blue * kernel[6]) + (bottom->blue * kernel[7]) + (bottom_right->blue * kernel[8])) / divider;
+
+            int32_t green_1 = top_left->green * kernel[0];
+            int32_t green_2 = top->green * kernel[1];
+            int32_t green_3 = top_right->green * kernel[2];
+            int32_t green_4 = left->green * kernel[3];
+            int32_t green_5 = self->green * kernel[4];
+            int32_t green_6 = right->green * kernel[5];
+            int32_t green_7 = bottom_left->green * kernel[6];
+            int32_t green_8 = bottom->green * kernel[7];
+            int32_t green_9 = bottom_right->green * kernel[8];
+
+            int32_t green_sum = green_1 + green_2 + green_3 + green_4 + green_5 + green_6 + green_7 + green_8 + green_9;
+            float green = (float)green_sum / divider;
+
+
+            int32_t blue_1 = top_left->blue * kernel[0];
+            int32_t blue_2 = top->blue * kernel[1];
+            int32_t blue_3 = top_right->blue * kernel[2];
+            int32_t blue_4 = left->blue * kernel[3];
+            int32_t blue_5 = self->blue * kernel[4];
+            int32_t blue_6 = right->blue * kernel[5];
+            int32_t blue_7 = bottom_left->blue * kernel[6];
+            int32_t blue_8 = bottom->blue * kernel[7];
+            int32_t blue_9 = bottom_right->blue * kernel[8];
+
+            int32_t blue_sum = blue_1 + blue_2 + blue_3 + blue_4 + blue_5 + blue_6 + blue_7 + blue_8 + blue_9;
+            float blue = (float)blue_sum / divider;
+
 
 
             if(red < 0){
@@ -386,14 +421,16 @@ uint32_t Bitmap_convolution(Bitmap *bitmap, const uint8_t *kernel, uint8_t divid
                 blue = 255;
             }
 
-            // change the color of the current pixel based on the calculation made with the kernel
-            self->red = red;
-            self->green = green;
-            self->blue = blue;
+            RGB * pixel = (RGB *) (bitmap->data + (index*3));
 
+            // change the color of the current pixel based on the calculation made with the kernel
+            pixel->red = red;
+            pixel->green = green;
+            pixel->blue = blue;
         }
     }
 
+    free(copy_data);
     return 0;
 }
 

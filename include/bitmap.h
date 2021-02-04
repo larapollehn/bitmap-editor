@@ -180,6 +180,6 @@ uint32_t Bitmap_draw_rect(Bitmap *bitmap, const Point * A, const Point * B, cons
  * @param divider
  * @return 0 if successful
  */
-uint32_t Bitmap_convolution(Bitmap *bitmap, const uint8_t kernel[], uint8_t divider);
+uint32_t Bitmap_convolution(Bitmap *bitmap, const int32_t kernel[], float divider);
 
 #endif //LIBRARY_BITMAP_H
