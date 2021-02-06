@@ -171,6 +171,8 @@ uint32_t Bitmap_draw_circle(Bitmap *bitmap, const Point * origin, uint32_t radiu
 uint32_t Bitmap_draw_rect(Bitmap *bitmap, const Point * A, const Point * B, const Point * C, const Point * D, RGB * color);
 
 /**
+ * For bitmaps without colorTable, holding the gb colors in the pixel values
+ * for 24bpp only !
  * https://en.wikipedia.org/wiki/Kernel_(image_processing)
  * Use this image processing technique to apply
  * blur, sharpen, emboss or much more to the given bitmap
@@ -180,6 +182,19 @@ uint32_t Bitmap_draw_rect(Bitmap *bitmap, const Point * A, const Point * B, cons
  * @param divider
  * @return 0 if successful
  */
-uint32_t Bitmap_convolution(Bitmap *bitmap, const int32_t kernel[], float divider);
+uint32_t Bitmap_convolution_px(Bitmap *bitmap, const int32_t *kernel, float divider);
+
+/**
+ * For bitmaps with colorTable and arbitrary bpp count
+ * https://en.wikipedia.org/wiki/Kernel_(image_processing)
+ * Use this image processing technique to apply
+ * blur, sharpen, emboss or much more to the given bitmap
+ * Edge Handling: Kernel Crop
+ * @param bitmap that will be altered using the given kernel
+ * @param kernel is a small matrix/mask used to alter the bitmap data (MUST BE 3x3)
+ * @param divider
+ * @return 0 if successful
+ */
+uint32_t Bitmap_convolution_ct(Bitmap *bitmap, const int32_t *kernel, float divider);
 
 #endif //LIBRARY_BITMAP_H

@@ -329,23 +329,15 @@ uint32_t Bitmap_draw_rect(Bitmap *bitmap, const Point *A, const Point *B, const 
     return 0;
 }
 
-uint32_t Bitmap_convolution(Bitmap *bitmap, const int32_t *kernel, float divider) {
+uint32_t Bitmap_convolution_px(Bitmap *bitmap, const int32_t *kernel, float divider) {
 
     // copy the bitmap data
     uint8_t * copy_data = malloc(sizeof(uint8_t) * bitmap->data_size);
     memcpy(copy_data, bitmap->data, bitmap->data_size);
 
-
-    /*
-     * Identity Kernel
-     * float kernel[] = {0, 0, 0
-     *                   0, 1, 0
-     *                   0, 0, 0}
-     */
-
     for (int32_t y = 1; y < bitmap->biHeight - 1; y++) {
         for (int32_t x = 1; x < bitmap->biWidth - 1; x++) {
-            int32_t index = (bitmap->biHeight * y) + x;
+            int32_t index = (bitmap->biWidth * y) + x;
 
             // get the indices of all kernel relevant data_pixels
             RGB * self = (RGB *) (copy_data + (index*3));

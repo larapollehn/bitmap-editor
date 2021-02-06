@@ -542,7 +542,7 @@ void testCase12() {
 }
 
 /**
- * Test Bitmap_convolution with Identity Kernel
+ * Test Bitmap_convolution_px with Identity Kernel
  */
 void testCase13() {
     // create Bitmap
@@ -582,7 +582,7 @@ void testCase13() {
     // the identity kernel does not change the picture
     // copy was not changed
     int32_t kernel[] = {0, 0, 0, 0, 1, 0, 0, 0, 0}; // Identity Kernel
-    Bitmap_convolution(&bitmap, kernel, 1);
+    Bitmap_convolution_px(&bitmap, kernel, 1);
 
     for (int i = 0; i < bitmap.data_size; i++) {
         RGB * bitmap_pixel = (RGB *) (bitmap.data + i);
@@ -605,7 +605,7 @@ void testCase13() {
 }
 
 /**
- * Test Bitmap_convolution with Box Blur Kernel
+ * Test Bitmap_convolution_px with Box Blur Kernel
  */
 void testCase14() {
     Bitmap bitmap;
@@ -619,7 +619,7 @@ void testCase14() {
     // the identity kernel does not change the picture
     // copy was not changed
     int32_t kernel[] = {1, 1, 1, 1, 1, 1, 1, 1, 1}; // Box Blur
-    Bitmap_convolution(&bitmap, kernel, 9);
+    Bitmap_convolution_px(&bitmap, kernel, 9);
 
     //copy the mutated bitmap into a file
     FILE *dest_2 = fopen("testCase14_lena.bmp", "wb");
@@ -633,7 +633,7 @@ void testCase14() {
 }
 
 /**
- * Test Bitmap_convolution with Gaussian Blur
+ * Test Bitmap_convolution_px with Gaussian Blur
  */
 void testCase15() {
     Bitmap bitmap;
@@ -647,7 +647,7 @@ void testCase15() {
     // the identity kernel does not change the picture
     // copy was not changed
     int32_t kernel[] = {1,0,-1,0,0,0,-1,0,1}; //
-    Bitmap_convolution(&bitmap, kernel, 1);
+    Bitmap_convolution_px(&bitmap, kernel, 1);
 
     //copy the mutated bitmap into a file
     FILE *dest_2 = fopen("testCase15.bmp", "wb");
@@ -661,7 +661,7 @@ void testCase15() {
 }
 
 /**
- * Test Bitmap_convolution with Identity Kernel
+ * Test Bitmap_convolution_px with Identity Kernel
  */
 void testCase16() {
     // create Bitmap
@@ -679,7 +679,7 @@ void testCase16() {
 
     // apply convolution
     int32_t kernel[] = {1,0,-1,0,0,0,-1,0,1};
-    Bitmap_convolution(&bitmap, kernel, 1);
+    Bitmap_convolution_px(&bitmap, kernel, 1);
 
     //copy the mutated bitmap into a file
     FILE *dest_2 = fopen("testCase16.bmp", "wb");
@@ -702,7 +702,7 @@ void testCase17() {
 
     // apply convolution
     int32_t kernel[] = {1,2,1,2,4,2,1,2,1}; // Gaussian Blur
-    Bitmap_convolution(&bitmap, kernel, 16);
+    Bitmap_convolution_px(&bitmap, kernel, 16);
 
     //copy the mutated bitmap into a file
     FILE *dest_2 = fopen("testCase17.bmp", "wb");
@@ -718,14 +718,18 @@ void testCase18() {
     // create Bitmap
     Bitmap bitmap;
 
-    FILE * dest = fopen("testCase12.bmp", "rb");
+    FILE * dest = fopen("tshirts.bmp", "rb");
 
     uint32_t scanned = Bitmap_scan(dest, &bitmap);
     assert_equal(0, scanned, "Failed: Bitmap_scan - testCase18")
 
+    /*
     // apply convolution
     int32_t kernel[] = {1,2,1,2,4,2,1,2,1};// Gaussian Blur
-    Bitmap_convolution(&bitmap, kernel, 16);
+    Bitmap_convolution_px(&bitmap, kernel, 16);
+     */
+    int32_t kernel[] = {1,0,-1,0,0,0,-1,0,1};
+    Bitmap_convolution_px(&bitmap, kernel, 1);
 
     //copy the mutated bitmap into a file
     FILE *dest_2 = fopen("testCase18.bmp", "wb");
@@ -742,7 +746,7 @@ void printAllPictureInfos() {
     Bitmap bitmap;
 
     // open bmp picture and scan into Bitmap
-    FILE *bmp = fopen("testCase12.bmp", "rb");
+    FILE *bmp = fopen("tshirts.bmp", "rb");
 
     uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
@@ -772,10 +776,13 @@ int main() {
     //testCase12();
     //testCase13();
     //testCase14();
+    /*
     testCase15();
-    testCase16();
+
     testCase17();
+     */
+    //testCase16();
     testCase18();
-    printAllPictureInfos();
+    //printAllPictureInfos();
     return 0;
 }
