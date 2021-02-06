@@ -138,7 +138,7 @@ void Bitmap_print(const Bitmap *bitmap) {
 
 uint32_t Bitmap_destroy(Bitmap *bitmap) {
 
-    if (bitmap->colorTable != NULL) {
+    if (bitmap->colorTable ) {
         free(bitmap->colorTable);
     }
 
@@ -329,7 +329,7 @@ uint32_t Bitmap_draw_rect(Bitmap *bitmap, const Point *A, const Point *B, const 
     return 0;
 }
 
-uint32_t Bitmap_convolution_px(Bitmap *bitmap, const int32_t *kernel, float divider) {
+uint32_t Bitmap_convolution(Bitmap *bitmap, const int32_t *kernel, float divider) {
 
     // copy the bitmap data
     uint8_t * copy_data = malloc(sizeof(uint8_t) * bitmap->data_size);
@@ -424,6 +424,51 @@ uint32_t Bitmap_convolution_px(Bitmap *bitmap, const int32_t *kernel, float divi
 
     free(copy_data);
     return 0;
+}
+
+uint32_t Bitmap_transform(Bitmap *bitmap) {
+    check_exit(bitmap->biBitCount == 8, "Only 8 bpp images can be transformed with Bitmap_transform()");
+
+    // calculate the new size for the bitmap data after transformation
+    uint32_t new_data_size = sizeof (RGB) * bitmap->data_size;
+
+    // allocate space for the data to be transformed
+    uint8_t * transformed_data = malloc(new_data_size);
+
+    for(int i = 0; i < bitmap->data_size; i++){
+        // get the color for the current pixel according to its reference to the indexed colorTable
+        RGB * color = (RGB *) ((bitmap->colorTable + *(bitmap->data + i)));
+
+        // since the bitmap.data is stored inverse, the RGB color values have to be flipped
+        uint8_t *blue = (transformed_data + (i*3));
+        uint8_t *green = (transformed_data + (i*3) + 1);
+        uint8_t *red = (transformed_data + (i*3) + 2);
+
+        *blue =  color->red;
+        *green = color->green;
+        *red = color->blue;
+    }
+
+    // reverse the bitmap.data
+
+    // free the old data and assign the transformed bitmap.data
+    // as well as the newly calculated data_size post transformation
+    free(bitmap->data);
+    bitmap->data = transformed_data;
+    bitmap->data_size = new_data_size;
+
+    // change the image accordingly to its new form
+    bitmap->biBitCount = 24;
+
+    // remove the colorTable info
+    bitmap->biClrUsed = 0;
+    bitmap->biClrImportant = 0;
+
+    bitmap->bfSize = bitmap->bfOffBits * new_data_size;
+
+    return 0;
+    error_handling:
+        return 1;
 }
 
 

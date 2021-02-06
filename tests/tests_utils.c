@@ -424,6 +424,54 @@ void testCase21(){
     assert_equal(0, pInRect, "Failed: point_in_rect");
 }
 
+/*
+ * Test reverse_array
+ */
+void testCase22(){
+    uint8_t array[] =    {2,4,5,6,8,9,0,18,4,24};
+    uint8_t reversed[] = {24,4,18,0,9,8,6,5,4,2};
+
+    reverse_array(array, 10);
+
+    for(int i = 0; i < 10; i++){
+        assert_equal(reversed[i], array[i], "Failed: reverse_array");
+    }
+
+}
+
+/*
+ * Test reverse_array
+ */
+void testCase23(){
+    uint32_t size = 255;
+    uint8_t array[size];
+
+    for(uint8_t i = 0; i < size; i++){
+        array[i] = i;
+    }
+
+    reverse_array(array, size);
+
+    for(uint32_t i = 0; i < size; i++){
+        assert_equal((size-i-1), array[i], "Failed: reverse_array: %d %d %d", size-i, array[i], i);
+    }
+}
+
+/*
+ * Test reverse_array
+ */
+void testCase24(){
+    uint8_t array[] =    {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+    uint8_t reversed[] = {15,14,13,12,11,10,9,8,7,6,5,4,3,2,1};
+
+    reverse_array(array, 15);
+
+    for(int i = 0; i < 15; i++){
+        assert_equal(reversed[i], array[i], "Failed: reverse_array");
+    }
+
+}
+
 int main(){
     /*
     testCase2();
@@ -447,5 +495,8 @@ int main(){
     testCase20();
     testCase21();
      */
+    //testCase22();
+    testCase23();
+    //testCase24();
     return 0;
 }

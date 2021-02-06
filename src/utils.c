@@ -96,4 +96,18 @@ uint8_t point_in_rect(const Point *A, const Point *B, const Point *C, const Poin
     }
 }
 
+void reverse_array(uint8_t *array, uint32_t len) {
+    uint32_t left = 0;
+    uint32_t right = len -1;
+
+    while(right >= left){
+        int current = array[left];
+        array[left] = array[right];
+        array[right] = current;
+
+        left++;
+        right--;
+    }
+}
+
 

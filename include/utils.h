@@ -96,4 +96,11 @@ double dot_product(const Point * A, const Point * B);
  */
 uint8_t point_in_rect(const Point * A, const Point * B, const Point * C, const Point * D, const Point * P);
 
+/**
+ * reverses the array content in-place
+ * @param array whose content will be reversed
+ * @param len is the length of the array in byte
+ */
+void reverse_array(uint8_t * array, uint32_t len);
+
 #endif //BITMAP_EDITOR_UTILS_H
