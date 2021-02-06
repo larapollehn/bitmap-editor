@@ -765,6 +765,7 @@ void testCase19(){
     assert_equal(0, copied_2, "Failed: Bitmap_copyIntoFile() - testCase19")
 
     fclose(dest);
+    fclose(dest_2);
     Bitmap_destroy(&bitmap);
 }
 
@@ -779,6 +780,7 @@ void testCase20(){
 
     uint32_t scanned = Bitmap_scan(dest, &bitmap);
     assert_equal(0, scanned, "Failed: Bitmap_scan - testCase20")
+
 
     Bitmap_print(&bitmap);
 
@@ -835,8 +837,8 @@ int main() {
     testCase17();
      */
     //testCase16();
-    //testCase18();
-    //testCase19();
+    testCase18();
+    testCase19();
     testCase20();
     //printAllPictureInfos();
     return 0;

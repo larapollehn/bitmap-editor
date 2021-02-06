@@ -449,8 +449,6 @@ uint32_t Bitmap_transform(Bitmap *bitmap) {
         *red = color->blue;
     }
 
-    // reverse the bitmap.data
-
     // free the old data and assign the transformed bitmap.data
     // as well as the newly calculated data_size post transformation
     free(bitmap->data);
