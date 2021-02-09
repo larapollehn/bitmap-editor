@@ -837,9 +837,9 @@ int main() {
     testCase17();
      */
     //testCase16();
-    testCase18();
+    //testCase18();
     testCase19();
-    testCase20();
+    //testCase20();
     //printAllPictureInfos();
     return 0;
 }
