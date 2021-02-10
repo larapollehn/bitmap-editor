@@ -186,7 +186,7 @@ uint32_t Bitmap_convolution(Bitmap *bitmap, const int32_t *kernel, float divider
 
 /**
  * Transform a 8bpp image with colorTable into an 24bpp image without colorTable
- * used to transform 8bpp images before applying convolutionor grayscaling (both expect 24bpp images)
+ * used to transform 8bpp images before applying convolution or grayscaling (both expect 24bpp images)
  * @param bitmap that will be transformed
  * @return 0 if successful, 1 if failed
  */

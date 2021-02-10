@@ -748,7 +748,7 @@ void testCase19(){
     // scan the 8bpp image
     Bitmap bitmap;
 
-    FILE * dest = fopen("lena.bmp", "rb");
+    FILE * dest = fopen("dots.bmp", "rb");
 
     uint32_t scanned = Bitmap_scan(dest, &bitmap);
     assert_equal(0, scanned, "Failed: Bitmap_scan - testCase19")
@@ -759,7 +759,7 @@ void testCase19(){
 
     // check the image visually
     //copy the mutated bitmap into a file
-    FILE *dest_2 = fopen("lena_24bpp.bmp", "wb");
+    FILE *dest_2 = fopen("dots_24bpp.bmp", "wb");
 
     uint32_t copied_2 = Bitmap_copyIntoFile(dest_2, &bitmap);
     assert_equal(0, copied_2, "Failed: Bitmap_copyIntoFile() - testCase19")
@@ -769,40 +769,13 @@ void testCase19(){
     Bitmap_destroy(&bitmap);
 }
 
-/*
- * Test Bitmap_transform()
- */
-void testCase20(){
-    // scan the 8bpp image
-    Bitmap bitmap;
-
-    FILE * dest = fopen("lena_24bpp.bmp", "rb");
-
-    uint32_t scanned = Bitmap_scan(dest, &bitmap);
-    assert_equal(0, scanned, "Failed: Bitmap_scan - testCase20")
-
-
-    Bitmap_print(&bitmap);
-
-    int32_t kernel[] = {1,0,-1,0,0,0,-1,0,1};
-    Bitmap_convolution(&bitmap, kernel, 1);
-
-    //copy the mutated bitmap into a file
-    FILE *dest_2 = fopen("testCase20.bmp", "wb");
-
-    uint32_t copied_2 = Bitmap_copyIntoFile(dest_2, &bitmap);
-    assert_equal(0, copied_2, "Failed: Bitmap_copyIntoFile() - testCase20")
-
-    fclose(dest);
-    Bitmap_destroy(&bitmap);
-}
 
 void printAllPictureInfos() {
 
     Bitmap bitmap;
 
     // open bmp picture and scan into Bitmap
-    FILE *bmp = fopen("lena.bmp", "rb");
+    FILE *bmp = fopen("dots.bmp", "rb");
 
     uint32_t scanned = Bitmap_scan(bmp, &bitmap);
     assert_equal(0, scanned, "Failed: scan");
@@ -838,8 +811,7 @@ int main() {
      */
     //testCase16();
     //testCase18();
-    testCase19();
-    //testCase20();
+    //testCase19();
     //printAllPictureInfos();
     return 0;
 }
