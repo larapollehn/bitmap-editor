@@ -19,7 +19,7 @@ file(GLOB test_files "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c")
 foreach (file ${test_files})
     get_filename_component(file_name ${file} NAME_WLE)
 
-    add_executable(${file_name} ${file})
+    add_executable(${file_name} ${file} include/cli.h)
 
     target_link_libraries(${file_name} ${PROJECT_NAME} m)
 endforeach ()
