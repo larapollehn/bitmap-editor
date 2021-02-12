@@ -113,8 +113,6 @@ uint32_t Bitmap_copyIntoFile(FILE *dest, Bitmap *bitmap) {
 }
 
 void Bitmap_print(const Bitmap *bitmap) {
-
-    printf("\nBitmap:\n");
     printf("bfType: %s\n", (char *) &bitmap->bfType);
     printf("bfSize: %d byte\n", bitmap->bfSize);
     printf("bfReserved: %d\n", bitmap->bfReserved);

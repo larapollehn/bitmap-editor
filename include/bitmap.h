@@ -8,6 +8,7 @@
 #define FILEHEADER_SIZE 14
 
 #include <stdint.h>
+#include "utils.h"
 
 typedef struct Color{
     uint8_t blue; // blue intensity - 1 byte
