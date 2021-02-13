@@ -769,6 +769,45 @@ void testCase19(){
     Bitmap_destroy(&bitmap);
 }
 
+void testCase20(){
+    // create Bitmap
+    Bitmap bitmap;
+
+    FILE * dest = fopen("test20_create.bmp", "wb");
+
+    RGB rose;
+    rose.red = 248;
+    rose.green = 203;
+    rose.blue = 219;
+
+    uint32_t created = Bitmap_create(&bitmap, &rose, 40, 40);
+    assert_equal(0, created, "Failed: Bitmap_create - testCase20")
+
+    uint32_t copied = Bitmap_copyIntoFile(dest, &bitmap);
+    assert_equal(0, copied, "Failed: Bitmap_copyIntoFile() - testCase20")
+
+    rewind(dest);
+
+    Bitmap bit2;
+
+    FILE * bit2_source = fopen("test20_create.bmp", "rb");
+    rewind(bit2_source);
+
+    uint32_t scanned = Bitmap_scan(bit2_source, &bit2);
+    assert_equal(0, scanned, "Failed: Bitmap_scan() - testCase20")
+
+    FILE * copy_dest = fopen("test20_copy_2.bmp", "wb");
+
+    uint32_t copied2 = Bitmap_copyIntoFile(copy_dest, &bit2);
+    assert_equal(0, copied2, "Failed: Bitmap_copyIntoFile() - testCase20")
+
+    fclose(dest);
+    fclose(bit2_source);
+    fclose(copy_dest);
+    Bitmap_destroy(&bitmap);
+    Bitmap_destroy(&bit2);
+}
+
 
 void printAllPictureInfos() {
 
@@ -812,6 +851,7 @@ int main() {
     //testCase16();
     //testCase18();
     //testCase19();
+    testCase20();
     //printAllPictureInfos();
     return 0;
 }

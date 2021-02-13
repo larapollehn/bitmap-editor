@@ -42,6 +42,7 @@ typedef struct Bitmap {
     int32_t biYPelsPerMeter; // vertical resolution: pixels/meter - 4 bytes
     uint32_t biClrUsed; // number of actually used colors (8 bit = 256), the number of values in Color - 4 bytes
     uint32_t biClrImportant; // number of important colors, 0 if all - 4 bytes
+
     Color * colorTable; // lists all colors used by the image
     uint8_t * data;
     uint32_t data_size;

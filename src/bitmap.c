@@ -93,8 +93,7 @@ uint32_t Bitmap_scan(FILE *source, Bitmap *bitmap) {
 
 uint32_t Bitmap_copyIntoFile(FILE *dest, Bitmap *bitmap) {
 
-    uint32_t writtenHeaders = fwrite(bitmap, sizeof(uint8_t), (FILEHEADER_SIZE + bitmap->biSize),
-                                     dest); // copy the file and info-header into the bmp pic
+    uint32_t writtenHeaders = fwrite(bitmap, sizeof(uint8_t), (FILEHEADER_SIZE + bitmap->biSize), dest); // copy the file and info-header into the bmp pic
     check_exit(writtenHeaders == (FILEHEADER_SIZE + bitmap->biSize), "Failed: writing headers")
 
     if (bitmap->colorTable_size > 0) {
