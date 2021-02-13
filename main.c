@@ -11,8 +11,8 @@ void info(char ** argv);
 void copy(char ** argv);
 void create(char ** argv);
 void drawCircle(char ** argv);
-void drawRectangle(char ** argv)
-void drawTriangle(char ** argv)
+void drawRectangle(char ** argv);
+void drawTriangle(char ** argv);
 
 int main(int argc, char **argv){
 
@@ -93,7 +93,7 @@ void copy(char ** argv){
 }
 
 void create(char ** argv){
-    // ./main [create|-c] [width:/w:] int [height:/h:] int [color:/c:] r g b test.bmp
+    // ./main [create|-c] [width:/w:] int [height:/h:] int [color:/c:] int int int test.bmp
     if((strcmp(argv[2], "width:") == 0 || strcmp(argv[2], "w:") == 0) &&
         (strcmp(argv[4], "height:") == 0 || strcmp(argv[4], "h:") == 0) &&
         (strcmp(argv[6], "color:") == 0 || strcmp(argv[6], "c:") == 0)){
@@ -122,4 +122,16 @@ void create(char ** argv){
             fprintf(stderr, "That did not work\n");
         }
     }
+}
+
+void drawCircle(char ** argv){
+    // TODO
+}
+
+void drawRectangle(char ** argv){
+    // TODO
+}
+
+void drawTriangle(char ** argv){
+    // TODO
 }
