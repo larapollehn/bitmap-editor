@@ -19,8 +19,6 @@ char * convolution[] = {"kernel=/k=[0,0,0,0,0,0,0,0,0]", "divider=/d=1"};
 
 void run(int argc, char ** argv);
 
-char * run(int argc, char **argv) {
 
-}
 
 #endif //LIBRARY_CLI_H
