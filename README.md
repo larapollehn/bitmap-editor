@@ -4,24 +4,6 @@ This simple bitmap editor is the product of my adventure of diving into the worl
 
 ---
 
-### Bitmap Images:
-
-The bitmap image file is a 2D raster graphic storing an image (digital) with varying options regarding the bitmap data and color channels.
-
-The binary file of an bitmap image stores two kinds of headers, an optional color table for indexed bitmap data and the actual bitmap data representing the individual pixels of the image.
-
-### Image processing
-
-With the help of a kernel, also known as convolution matrix or mask, the original image data (pixels) will be convolved to accomplish a wide range of effects like the Gaussian blur, edge detection or sharpening.
-
-### Linear Algebra
-
-In order to draw geometric shapes into a bitmap image several topics of linear algebra were needed to for example correctly determine if a pixel lies within a triangle/square/circle shape.
-
-Topics included: matrices and vectors, pythagorean theorem, scalar product (dot-product), barycentric weights 
-
----
-
 ## Editor Features
 
 After compiling the project with gcc the bitmap-editor can be used over the command line. See below for the help page listing all available features with sample commands.
@@ -165,6 +147,26 @@ Edge Handling: Crop (all the edge pixels are untouched)
         <td><img alt="edge-after" src="images/blackbuck_sharpen.bmp"></td>
     </tr>
 </table>
+
+---
+
+### Bitmap Images:
+
+The bitmap image file is a 2D raster graphic storing an image (digital) with varying options regarding the bitmap data and color channels.
+
+The binary file of an bitmap image stores two kinds of headers, an optional color table for indexed bitmap data and the actual bitmap data representing the individual pixels of the image.
+
+### Image processing
+
+With the help of a kernel, also known as convolution matrix or mask, the original image data (pixels) will be convolved to accomplish a wide range of effects like the Gaussian blur, edge detection or sharpening.
+
+### Linear Algebra
+
+In order to draw geometric shapes into a bitmap image several topics of linear algebra were needed to for example correctly determine if a pixel lies within a triangle/square/circle shape.
+
+Topics included: matrices and vectors, pythagorean theorem, scalar product (dot-product), barycentric weights
+
+---
 
 ### References
 - [BMP Files](https://people.math.sc.edu/Burkardt/data/bmp/bmp.html)
