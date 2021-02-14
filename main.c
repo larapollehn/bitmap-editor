@@ -77,7 +77,7 @@ void help(){
 
     printf("grayscale an image (naive (r+g+b)/3 )\n");
     printf("   grayscale     %s [grayscale|-gs] <src-file> <dest-file>\n", name);
-    printf("                 e.g.: '%s copy lena.bmp lena_gray.bmp'\n\n", name);
+    printf("                 e.g.: '%s grayscale lena.bmp lena_gray.bmp'\n\n", name);
 
     printf("create 24bpp images and draw geometric shapes on them\n");
     printf("   create        %s [create|-c] [width:|w:] int [height:/h:] int [color:/c:] int(r) int(g) int(b) <dest-file>\n", name);
@@ -87,7 +87,7 @@ void help(){
     printf("   draw-rect     %s [draw|-d] [rectangle|-r] [pointE:/e:] int(x) int(y) [pointF:/f:] int(x) int(y) [pointG:/g:] int(x) int(y) [pointH:/h:] int(x) int(y) [color:/c:] int(r) int(g) int(b) <dest-file>\n", name);
     printf("                 e.g.: '%s draw rectangle e: 50 50 f: 50 100 g: 100 100 h: 100 50 c: 71 167 255 pink_panther.bmp'\n\n", name);
     printf("   draw-tri      %s [draw|-d] [triangle|-t] [pointE:/e:] int(x) int(y) [pointF:/f:] int(x) int(y) [pointG:/g:] int(x) int(y) [color:/c:] int(r) int(g) int(b) <dest-file>\n", name);
-    printf("                 e.g.: '%s draw rectangle e: 50 150 f: 20 300 g: 300 300 c: 16 95 74 pink_panther.bmp'\n\n", name);
+    printf("                 e.g.: '%s draw triangle e: 50 150 f: 20 300 g: 300 300 c: 16 95 74 pink_panther.bmp'\n\n", name);
 
     printf("simple image processing using image convolution and an 3x3 kernel\n");
     printf("   convolution   %s [convolution|-cv] [kernel:|k:] int int int int int int int int int [divider:|d:] int <src-file> <dest-file>\n", name);
