@@ -95,15 +95,15 @@ A completely new bitmap image can be created and as many (or none) triangles, re
     </tr>
     <tr>
         <td>Draw Circle</td>
-        <td><img alt="draw-circle" src="images/pink_panther_circle.bmp"></td>
+        <td><img width="50%" alt="draw-circle" src="images/pink_panther_circle.bmp"></td>
     </tr>
     <tr>
         <td>Draw Rectangle</td>
-        <td><img alt="draw-rectangle" src="images/pink_panther_rect.bmp"></td>
+        <td><img width="50%" alt="draw-rectangle" src="images/pink_panther_rect.bmp"></td>
     </tr>
     <tr>
         <td>Draw Triangle</td>
-        <td><img alt="draw-triangle" src="images/pink_panther_tri.bmp"></td>
+        <td><img width="50%" alt="draw-triangle" src="images/pink_panther_tri.bmp"></td>
     </tr>
 </table>
 
