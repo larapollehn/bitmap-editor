@@ -18,7 +18,7 @@ With the help of a kernel, also known as convolution matrix or mask, the origina
 
 In order to draw geometric shapes into a bitmap image several topics of linear algebra were needed to for example correctly determine if a pixel lies within a triangle/square/circle shape.
 
-Topics including: matrices and vectors, pythagorean theorem, scalar product (dot-product), barycentric weights 
+Topics included: matrices and vectors, pythagorean theorem, scalar product (dot-product), barycentric weights 
 
 ---
 
@@ -65,6 +65,8 @@ simple image processing using image convolution and an 3x3 kernel
 
 ```
 
+---
+
 ### Grayscale
 
 A naive interpretation to grayscale an image with 3 color channels (red, green, blue). The gray shade is computed by adding the RGB color channel values and dividing the sum by three. Alpha Channels are not included.
@@ -84,9 +86,11 @@ A naive interpretation to grayscale an image with 3 color channels (red, green, 
     </tr>
 </table>
 
+---
+
 ### Create and Draw
 
-A completely new bitmap image can be created and as many (or none) triangles, rectangles and circles can be drawn onto it. The resulting image does not index the pixel color but uses 3 Bytes (one for each of the three color channels) to store the colors directly in the image data (pixels).
+A completely new bitmap image can be created and as many (or none) triangles, rectangles and circles can be drawn onto it. The resulting image does not index the pixel colors, instead uses 3 Bytes (one for each of the three color channels) to store the colors directly in the image data (pixels).
 
 <table width="100%">
     <tr>
@@ -107,12 +111,14 @@ A completely new bitmap image can be created and as many (or none) triangles, re
     </tr>
 </table>
 
+---
+
 ### Convolution
 
 With the use of a 3x3 kernel and the belonging divider the original bitmap image is convolved. 
 Edge Handling: Crop (all the edge pixels are untouched)
 
-1. Edge Detection (different kernels)
+##### 1. Edge Detection (different kernels)
 <table width="100%">
     <tr>
         <td>Before<br></td>
@@ -128,7 +134,7 @@ Edge Handling: Crop (all the edge pixels are untouched)
     </tr>
 </table>
 
-2. Blur (Box Blur & Gaussian Blur)
+##### 2. Blur (Box Blur & Gaussian Blur)
 <table width="100%">
     <tr>
         <td>Before<br></td>
@@ -144,7 +150,7 @@ Edge Handling: Crop (all the edge pixels are untouched)
     </tr>
 </table>
 
-3. Sharpen
+##### 3. Sharpen
 <table width="100%">
     <tr>
         <td>Before<br></td>
