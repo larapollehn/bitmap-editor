@@ -76,7 +76,7 @@ A naive interpretation to grayscale an image with 3 color channels (red, green, 
     </tr>
     <tr> 
         <td><img alt="before-grayscale" src="images/field_xs.bmp"></td>
-        <td><img alt="after-grayscale" src="images/gray_field.bmp"></td>
+        <td><img alt="after-grayscale" src="field_images/gray_field.bmp"></td>
     </tr>
     <tr>
         <td><img alt="before-grayscale" src="images/map.bmp"></td>
@@ -91,7 +91,7 @@ A completely new bitmap image can be created and as many (or none) triangles, re
 <table width="100%">
     <tr>
         <td>Create</td>
-        <td><img alt="create" src="images/pink_panther_original.bmp"></td>
+        <td><img width="50%" alt="create" src="images/pink_panther_original.bmp"></td>
     </tr>
     <tr>
         <td>Draw Circle</td>
@@ -120,7 +120,7 @@ Edge Handling: Crop (all the edge pixels are untouched)
     </tr>
     <tr>
         <td><img alt="edge-before" src="images/field_xs.bmp"></td>
-        <td><img alt="edge-after" src="images/blur_image.bmp"></td>
+        <td><img alt="edge-after" src="field_images/blur_image.bmp"></td>
     </tr>
     <tr>
         <td><img alt="edge-before" src="images/tshirts.bmp"></td>
@@ -136,7 +136,7 @@ Edge Handling: Crop (all the edge pixels are untouched)
     </tr>
     <tr>
         <td><img alt="edge-before" src="images/field_xs.bmp"></td>
-        <td><img alt="edge-after" src="images/blur_image.bmp"></td>
+        <td><img alt="edge-after" src="field_images/blur_image.bmp"></td>
     </tr>
     <tr>
         <td><img alt="edge-before" src="images/tshirts.bmp"></td>
@@ -152,7 +152,7 @@ Edge Handling: Crop (all the edge pixels are untouched)
     </tr>
     <tr>
         <td><img alt="edge-before" src="images/field_xs.bmp"></td>
-        <td><img alt="edge-after" src="images/fields_sharpen.bmp"></td>
+        <td><img alt="edge-after" src="field_images/fields_sharpen.bmp"></td>
     </tr>
     <tr>
         <td><img alt="edge-before" src="images/blackbuck.bmp"></td>
