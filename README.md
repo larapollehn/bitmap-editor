@@ -120,7 +120,7 @@ Edge Handling: Crop (all the edge pixels are untouched)
     </tr>
     <tr>
         <td><img alt="edge-before" src="images/field_xs.bmp"></td>
-        <td><img alt="edge-after" src="images/field_edge_2.bmp"></td>
+        <td><img alt="edge-after" src="images/blur_image.bmp"></td>
     </tr>
     <tr>
         <td><img alt="edge-before" src="images/tshirts.bmp"></td>
@@ -136,7 +136,7 @@ Edge Handling: Crop (all the edge pixels are untouched)
     </tr>
     <tr>
         <td><img alt="edge-before" src="images/field_xs.bmp"></td>
-        <td><img alt="edge-after" src="images/field_blur_1.bmp"></td>
+        <td><img alt="edge-after" src="images/blur_image.bmp"></td>
     </tr>
     <tr>
         <td><img alt="edge-before" src="images/tshirts.bmp"></td>
